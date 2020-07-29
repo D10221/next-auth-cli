@@ -2,7 +2,7 @@
  * DEMO custom Models
  * add a 'password' field to 'users'
  */
-import Adapters from "next-auth/adapters";
+import Adapters from "next-auth/adapters.js";
 const models = Adapters.TypeORM.Models;
 export default {
   ...models,

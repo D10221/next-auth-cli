@@ -2,9 +2,9 @@
   "name": "next-auth-migrations",
   "description": "Not really a migration tool, but helps you create the tables from 'code first' models",
   "version": "0.1.0-1",
-  "module": "esm/index.js",
-  "main": "cjs/index.js",
-  "types": "cjs/index.d.ts",
+  "type": "module",
+  "types": "index.d.ts",
+  "module": "index.js",
   "bin": {
     "next-auth-migrations": "bin/cli.js"
   },

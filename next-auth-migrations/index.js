@@ -1,11 +1,11 @@
 // @ts-ignore
-import Adapters from "next-auth/adapters";
+import Adapters from "next-auth/adapters.js";
 // @ts-ignore
-import AdapterConfig from "next-auth/dist/adapters/typeorm/lib/config";
+import AdapterConfig from "next-auth/dist/adapters/typeorm/lib/config.js";
 // @ts-ignore
-import Transform from "next-auth/dist/adapters/typeorm/lib/transform";
+import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
 import path from "path";
-import { createConnection, Table } from "typeorm";
+import typeorm from "typeorm";
 /**
  * @param {import("typeorm").Connection} connection
  * @param {import("typeorm").Table[]} tables
@@ -38,17 +38,19 @@ async function* createTables(connection, tables, options) {
     return Promise.reject(error);
   }
 }
+import module from "module";
 /**
  * @param {string} modulePath
  * @returns {Promise<any>}
  */
 async function importModels(modulePath) {
-  const _module = await import(
-    modulePath.startsWith(".")
-      ? path.join(process.cwd(), modulePath)
-      : modulePath
-  );
-  return _module.default || _module;
+  const relativePath = modulePath.startsWith(".")
+    ? path.join(process.cwd(), modulePath)
+    : modulePath;
+  const require = module.createRequire(import.meta.url);
+  const ret = require("esm")(new module.Module(relativePath))(relativePath);
+  const ret1 = ret.default || ret;
+  return typeof ret1 === "function" ? ret1(Adapters.TypeORM.Models) : ret1;
 }
 /**
  *
@@ -75,7 +77,7 @@ function toTables(models, options) {
           entityPrefix && `${entityPrefix}${schema.name}`
         )
       : schema.name;
-    return new Table({
+    return new typeorm.Table({
       ...schema,
       name: tableName,
       columns,
@@ -84,36 +86,10 @@ function toTables(models, options) {
   });
 }
 /**
- * @param {(...args:any)=> any} [log]
- * */
-function runner(log) {
-  /**
-   * @param {[import("typeorm").ConnectionOptions, import("./types").Models]} args
-   * @returns {Promise<void>}
-   */
-  async function run([config, models]) {
-    let connection;
-    try {
-      // ...
-      connection = await createConnection(config);
-      for await (const progress of createTables(connection, toTables(models))) {
-        log && (await log("%s: done", progress));
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    } finally {
-      if (connection && connection.isConnected) {
-        connection.close();
-      }
-    }
-  }
-  return run;
-}
-/**
  * @param {string} url
  */
 function parse(url) {
-  return AdapterConfig.parseConnectionString(url);
+  return AdapterConfig.default.parseConnectionString(url);
 }
 /**
  *
@@ -121,7 +97,7 @@ function parse(url) {
  * @returns {[import("typeorm").ConnectionOptions, import("./types").Models]}
  */
 const loadConfig = ([config, models]) => {
-  AdapterConfig.loadConfig(config, { models });
+  AdapterConfig.default.loadConfig(config, { models });
   return [config, models];
 };
 /**
@@ -130,7 +106,7 @@ const loadConfig = ([config, models]) => {
  * @returns {[import("typeorm").ConnectionOptions, import("./types").Models]}
  */
 const transform = ([config, models]) => {
-  Transform(config, models, config);
+  Transform.default(config, models, config);
   return [config, models];
 };
 /**
@@ -149,6 +125,32 @@ const setup = async (config, models) => {
     return Promise.reject(error);
   }
 };
+/**
+ * @param {(...args:any)=> any} [log]
+ * */
+function runner(log) {
+  /**
+   * @param {[import("typeorm").ConnectionOptions, import("./types").Models]} args
+   * @returns {Promise<void>}
+   */
+  async function run([config, models]) {
+    let connection;
+    try {
+      // ...
+      connection = await typeorm.createConnection(config);
+      for await (const progress of createTables(connection, toTables(models))) {
+        log && (await log("%s: done", progress));
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    } finally {
+      if (connection && connection.isConnected) {
+        connection.close();
+      }
+    }
+  }
+  return run;
+}
 /**
  * @param {import("typeorm").ConnectionOptions|string} config
  * @param {import("./types").Models|string} [models]

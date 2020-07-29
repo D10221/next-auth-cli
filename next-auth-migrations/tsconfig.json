@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",    
+    "module": "ESNext",    
+    "moduleResolution": "Node",
     "allowJs": true,
     "checkJs": true,
     "strict": true,
@@ -9,8 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,    
-    "skipDefaultLibCheck": true,
-    "outDir": "./cjs"
+    "emitDeclarationOnly": true
   },
-  "include": ["esm"], 
+  "include": ["index.js"], 
 }
