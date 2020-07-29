@@ -2,7 +2,7 @@
   "name": "next-auth-migrations",
   "description": "Not really a migration tool, but helps you create the tables from 'code first' models",
   "version": "0.1.0-1",
-  "type": "module",
+  "type": "module",  
   "types": "index.d.ts",
   "module": "index.js",
   "bin": {
@@ -12,20 +12,19 @@
   "license": "MIT",
   "dependencies": {
     "esm": "^3.2.25",
-    "jest": "^26.1.0",
     "minimist": "^1.2.5",
+    "mocha": "^8.0.1",
     "next-auth": "../next-auth"
   },
   "peerDependencies": {
     "mssql": "^6.2.1"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.7",
     "mssql": "^6.2.1",
     "typescript": "^3.9.7"
   },
   "scripts": {
     "build": "tsc -p .",
-    "test": "jest --env=node --ci=true"
+    "test": "mocha"
   }
 }

@@ -40,7 +40,7 @@ async function* createTables(connection, tables, options) {
 }
 import module from "module";
 /**
- * @param {string} modulePath
+ * @param {string} modulePath absolute or relative to cwd
  * @returns {Promise<any>}
  */
 async function importModels(modulePath) {
@@ -57,7 +57,7 @@ async function importModels(modulePath) {
  * @param {import("./types").Models} models
  * @param {{namingStrategy?: import("typeorm").NamingStrategyInterface, entityPrefix?: string}} [options]
  */
-function toTables(models, options) {
+export function toTables(models, options) {
   const { namingStrategy, entityPrefix } = options || {};
   return Object.values(models).map(({ schema }) => {
     const columns = Object.keys(schema.columns).map((key) => ({
@@ -87,6 +87,7 @@ function toTables(models, options) {
 }
 /**
  * @param {string} url
+ * @returns {import("typeorm").ConnectionOptions}
  */
 function parse(url) {
   return AdapterConfig.default.parseConnectionString(url);
@@ -96,16 +97,21 @@ function parse(url) {
  * @param {[import("typeorm").ConnectionOptions, import("./types").Models]} args
  * @returns {[import("typeorm").ConnectionOptions, import("./types").Models]}
  */
-const loadConfig = ([config, models]) => {
-  AdapterConfig.default.loadConfig(config, { models });
-  return [config, models];
+export const loadConfig = ([config, models]) => {
+  return [
+    AdapterConfig.default.loadConfig(config, {
+      models,
+      namingStrategy: config.namingStrategy,
+    }), //
+    models,
+  ];
 };
 /**
  *
  * @param {[import("typeorm").ConnectionOptions, import("./types").Models]} args
  * @returns {[import("typeorm").ConnectionOptions, import("./types").Models]}
  */
-const transform = ([config, models]) => {
+export const transform = ([config, models]) => {
   Transform.default(config, models, config);
   return [config, models];
 };
@@ -115,10 +121,10 @@ const transform = ([config, models]) => {
  * @param {import("./types").Models|string} models
  * @returns {Promise<[import("typeorm").ConnectionOptions, import("./types").Models]>}
  */
-const setup = async (config, models) => {
+export const setup = async (config, models) => {
   try {
     return [
-      typeof config === "string" ? await parse(config) : config,
+      typeof config === "string" ? parse(config) : config,
       typeof models === "string" ? await importModels(models) : models,
     ];
   } catch (error) {
@@ -138,7 +144,10 @@ function runner(log) {
     try {
       // ...
       connection = await typeorm.createConnection(config);
-      for await (const progress of createTables(connection, toTables(models))) {
+      for await (const progress of createTables(
+        connection,
+        toTables(models, config)
+      )) {
         log && (await log("%s: done", progress));
       }
     } catch (error) {
@@ -157,7 +166,11 @@ function runner(log) {
  * @param {(...args:any)=> any} [log]
  * @returns {Promise<void>}
  */
-export default function (config, models = Adapters.TypeORM.Models, log) {
+export default function nextAuthMigration(
+  config,
+  models = Adapters.TypeORM.Models,
+  log
+) {
   return setup(config, models)
     .then(loadConfig)
     .then(transform)
