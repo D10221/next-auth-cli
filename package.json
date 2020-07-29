@@ -1,0 +1,7 @@
+{  
+  "private": true,   
+  "workspaces": [
+    "next-auth-migrations",
+    "next-auth-migrations-demo"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "next-auth-migrations-demo",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mr D.",
+  "license": "MIT",
+  "dependencies": {
+    "next-auth-migrations": "0.1.0"
+  },
+  "scripts": {
+    "start": "next-auth-migrations --databaseUrl=mssql://test:test@localhost:1433/testdb2 --models=./models.js"
+  },
+  "devDependencies": {
+    "jest": "^26.1.0"
+  }
+}
