@@ -1,73 +1,81 @@
 #!/usr/bin/env node
 import fs from "fs";
 import path from "path";
-import args from "minimist";
 import dotnev from "dotenv";
-// ... setup ...
-let { databaseUrl, quiet, models, help, env: envPath, ci } = args(
-  process.argv.slice(2)
-);
-const __dirname = path.dirname(import.meta.url)
-dotnev.config({
-  path:
-    envPath || fs.existsSync(path.join(__dirname, ".env.local"))
-      ? path.join(__dirname, ".env.local") //allow shadow '.env'
-      : path.join(__dirname, ".env"),
-});
-quiet = quiet || Boolean(ci) || Boolean(process.env.CI); // common env flags compat
-databaseUrl = databaseUrl || process.env.DATABASE_URL;
-const log = (!quiet && console.log.bind(console)) || (() => {});
+import yargs from "yargs";
+import Debug from "debug";
+const debug = Debug("next-auth-cli");
+const { usage, showHelp } = yargs;
+// url, quiet, models, help, env: envPath, ci
+var argv = usage(
+  "Usage:\n $0 [-u <$DATABASE_URL>] [-q] [-c] [-m=</models.js>]"
+).options({
+  url: {
+    description:
+      "Driven dependent database url, overrides $DATABASE_URL\n" +
+      "Typically:\n<driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt>=<val>]]\n" +
+      "Required when $DATABASE_URL not present\n" +
+      "Wellknown valid options are: \n" +
+      "- ?namingStrategy=<supported-next-auth-naming-strategy>\n" +
+      "- ?entityPrefix=<string>\n" +
+      "- ?synchronize=<true|false>",
+    // required: !process.env.DATABASE_URL,
+    alias: "u",
+    string: true,
+  },
+  quiet: {
+    description: "Be quiet",
+    boolean: true,
+    alias: "q",
+  },
+  ci: {
+    description: "same as --quiet, overrides $CI",
+    boolean: true,
+    alias: "c",
+  },
+  models: {
+    description:
+      "../path/to/my/models.js\n" +
+      "- As default export\n" +
+      "- Absolute or relative to cwd.\n" +
+      "- Defaults to next-auth Models",
+    type: "string",
+    alias: "m",
+    normalize: true,
+  },
+  env: {
+    description: '../path/to/.env-file\ndefaults to "$cwd/.env(.local)?',
+  },
+}).argv;
 /** run */
-(async () => {
+(async ({ url, quiet, models, help, env: envPath, ci, ...etc }) => {
+  // ...
   try {
-    if (help) {
+    const cwd = process.cwd();
+    dotnev.config({
+      path:
+        envPath || fs.existsSync(path.join(cwd, ".env.local"))
+          ? path.join(cwd, ".env.local") //allow shadow '.env'
+          : path.join(cwd, ".env"),
+    });
+    quiet = quiet || Boolean(ci) || Boolean(process.env.CI); // common env flags compat
+    if (!quiet) debug.enabled = true;
+    url = url || process.env.DATABASE_URL;
+    if (!url) {
+      if (quiet) throw new Error("Missing or empty database url");
+      console.error("Missing or empty database url");
       return showHelp();
     }
-    if (!databaseUrl) {
-      if (quiet) throw new Error("Can't find database url");
-      return showHelp(
-        "\nExpected:\n%s",
-        "$DATABASE_URL|--databaseUrl (Required)"
-      );
-    }
-    await (await import("next-auth-migrations")).default(
-      databaseUrl,
-      models,
-      log
-    );
-    log("migration: done");
+    await (await import("next-auth-migrations")).default(url, models);
+    debug("migration: done");
   } catch (error) {
     console.error(error);
     return Promise.reject(error);
   }
-})()
+})(argv)
   .then(() => {
     process.exit();
   })
   .catch(() => {
     process.exit(-1);
   });
-/**
- * @param {any[]} args
- */
-function showHelp(...args) {
-  log(
-    [
-      "Usage:",
-      `  --databaseUrl=<driver>://<user>:<password>@<server>[:port]/<databasename> # overrides $DATABASE_URL`,
-      `  Env:`,
-      `     $DATABASE_URL # overrided by '--databaseUrl'`,
-      `     $CI # boolean, same as '--quiet' (optional)`,
-      `  Options:`,
-      `    --models=../path/to/my/models.js # default export (optional)`,
-      `    --quiet (No log) (optional)`,
-      `    --ci (same as '--quiet') (optional)`,
-      `    --env="path/to/.env-file" #default to ".env(.local)?" (optional)`,
-      typeof args === "string" && args,
-      typeof args[0] === "string" && args[0],
-    ]
-      .filter(Boolean)
-      .join("\n"),
-    ...((typeof args[0] === "string" && args.slice(1)) || args || [])
-  );
-}

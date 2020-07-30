@@ -1,19 +1,23 @@
+import Debug from "debug";
+import module from "module";
 // @ts-ignore
 import Adapters from "next-auth/adapters.js";
 // @ts-ignore
 import AdapterConfig from "next-auth/dist/adapters/typeorm/lib/config.js";
 // @ts-ignore
-import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
-// @ts-ignore
 import namingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strategies.js";
+// @ts-ignore
+import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
 import path from "path";
 import typeorm from "typeorm";
+const debug = Debug("next-auth-cli");
 /**
  * @param {import("typeorm").Connection} connection
  * @param {import("typeorm").Table[]} tables
  * @param {{ ifNotExists?: boolean, createForeignKeys?: boolean,transaction?:boolean, createIndices?: boolean}} [options]
+ * @returns {Promise<void>}
  */
-async function* createTables(connection, tables, options) {
+async function createTables(connection, tables, options) {
   const { ifNotExists, createForeignKeys, createIndices, transaction } = {
     ifNotExists: true,
     createForeignKeys: false,
@@ -31,7 +35,7 @@ async function* createTables(connection, tables, options) {
         createForeignKeys,
         createIndices || (table.indices && !!table.indices.length)
       );
-      yield `${table.name}`;
+      debug(`done: %s`, table.name);
     }
     if (queryRunner.isTransactionActive) await queryRunner.commitTransaction();
   } catch (error) {
@@ -40,7 +44,6 @@ async function* createTables(connection, tables, options) {
     return Promise.reject(error);
   }
 }
-import module from "module";
 /**
  * @param {string} modulePath absolute or relative to cwd
  * @returns {Promise<any>}
@@ -148,56 +151,49 @@ export const setup = async (config, models) => {
   }
 };
 /**
- * @param {(...args:any)=> any} [log]
- * */
-function runner(log) {
-  /**
-   * @param {[import("typeorm").ConnectionOptions, import("./types").Models]} args
-   * @returns {Promise<void>}
-   */
-  async function run([config, models]) {
-    let connection;
-    try {
-      connection = await typeorm.createConnection(config);
-      if (config.synchronize) {
-        // if "?synchronize=true" just sync
-        await connection.synchronize(
-          // "&dropSchema=true"
-          config.dropSchema
-        );
-        log && log("synchronized.");
-      } else {
-        // ...
-        for await (const progress of createTables(
-          connection,
-          toTables(models, config)
-        )) {
-          log && (await log("%s: done", progress));
-        }
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    } finally {
-      if (connection && connection.isConnected) {
-        connection.close();
-      }
+ * @param {[import("./types").ConnectionOptions, import("./types").Models  ]} args
+ * @returns {Promise<void>}
+ */
+async function run([config, models]) {
+  let connection;
+  try {
+    debug(
+      "connecting as %s to %s://%s:%s/%s",
+      config.name,
+      config.type,
+      config.host,
+      config.port,
+      config.database
+    );
+    connection = await typeorm.createConnection(config);
+    if (config.synchronize) {
+      // if "?synchronize=true" just sync
+      await connection.synchronize(
+        // "&dropSchema=true"
+        config.dropSchema
+      );
+      debug("synchronized.");
+    } else {
+      // ...
+      await createTables(connection, toTables(models, config));
+      debug("done");
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  } finally {
+    if (connection && connection.isConnected) {
+      connection.close();
     }
   }
-  return run;
 }
 /**
  * @param {import("typeorm").ConnectionOptions|string} config
  * @param {import("./types").Models|string} [models]
- * @param {(...args:any)=> any} [log]
  * @returns {Promise<void>}
  */
 export default function nextAuthMigration(
   config,
-  models = Adapters.TypeORM.Models,
-  log
+  models = Adapters.TypeORM.Models
 ) {
-  return setup(config, models)
-    .then(loadConfig)
-    .then(transform)
-    .then(runner(log));
+  return setup(config, models).then(loadConfig).then(transform).then(run);
 }

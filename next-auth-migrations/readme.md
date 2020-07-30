@@ -13,7 +13,16 @@ Usage?
 node_modules/.bin/next-auth-migrations --databaseUrl=mssql://test:test@localhost:1433/testdb --models=./models.js
 ```
 
-NOTE:   
-It's pretty much the same as running your project with '?synchronize=true'  once.
+NOTE:  
+It's pretty much the same as running your project with '?synchronize=true' once.
+
+NOTE:
+
+- Implicit dependencies: 
+  - typeorm:
+    - chalk
+    - dotenv
+    - debug
+    - yargs
 
 NOTE: (wip)
