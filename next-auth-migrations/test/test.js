@@ -17,22 +17,22 @@ const entities = [
 ];
 
 describe("next-auth-migrations", () => {
-  it("can be imported", () => {
+  it('"module" can be imported', () => {
     assert.equal(migration.name, "nextAuthMigration");
   });
-  it("can be dynamically imported", async () => {
+  it('"module" can be dynamically imported', async () => {
     assert.equal(
       (await import("next-auth-migrations")).default.name,
       "nextAuthMigration"
     );
   });
-  it("doesn't leak imports", async () => {
+  it('"module" doesn\'t leak imports', async () => {
     assert.strictEqual(
       (await import("next-auth-migrations")).default,
       migration
     );
   });
-  it("setup", async () => {
+  it('"setup" populates connection confgiuration from database url', async () => {
     const [config, models] = await setup(
       "mssql://sa:123@localhost:1422/mydb?xyz=true"
     );
@@ -47,7 +47,7 @@ describe("next-auth-migrations", () => {
       xyz: true,
     });
   });
-  it("loadConfig", () => {
+  it('loadConfig "sets defaults"', () => {
     const [config, models] = loadConfig([
       {
         type: "mssql",
@@ -83,7 +83,7 @@ describe("next-auth-migrations", () => {
     assert.equal(models.Session.schema.name, "Session");
     assert.equal(models.VerificationRequest.schema.name, "VerificationRequest");
   });
-  it("transform", () => {
+  it('transform "adds naming stratgy and mutates models"', () => {
     const expected = {
       name: "nextauth",
       autoLoadEntities: true,
@@ -106,16 +106,14 @@ describe("next-auth-migrations", () => {
     assert.equal(typeof config.namingStrategy.tableName, "function");
     assert.equal(config.namingStrategy.tableName("thing"), "things");
   });
-  it("to-tables", () => {
+  it("converts models to typeorm.Table[] (toTables)", () => {
     const tables = toTables(Adapters.TypeORM.Models, {
       namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),
       entiPrefix: "nextauth_",
     });
-    assert.deepEqual(tables.map((x) => x.name), [
-      "accounts",
-      "users",
-      "sessions",
-      "verification_requests",
-    ]);
+    assert.deepEqual(
+      tables.map((x) => x.name),
+      ["accounts", "users", "sessions", "verification_requests"]
+    );
   });
 });
