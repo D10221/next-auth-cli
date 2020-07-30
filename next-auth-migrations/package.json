@@ -26,5 +26,10 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "mocha"
-  }
+  },
+  "files": [
+    "bin",
+    "index.*",
+    "types.d.ts"
+  ]
 }
