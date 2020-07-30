@@ -4,6 +4,8 @@ import Adapters from "next-auth/adapters.js";
 import AdapterConfig from "next-auth/dist/adapters/typeorm/lib/config.js";
 // @ts-ignore
 import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
+// @ts-ignore
+import namingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strategies.js";
 import path from "path";
 import typeorm from "typeorm";
 /**
@@ -56,6 +58,7 @@ async function importModels(modulePath) {
  *
  * @param {import("./types").Models} models
  * @param {{namingStrategy?: import("typeorm").NamingStrategyInterface, entityPrefix?: string}} [options]
+ * @returns {import("typeorm").Table[]}
  */
 export function toTables(models, options) {
   const { namingStrategy, entityPrefix } = options || {};
@@ -93,7 +96,7 @@ function parse(url) {
   return AdapterConfig.default.parseConnectionString(url);
 }
 /**
- *
+ * adds defaults to configuration/ConnectionOptions
  * @param {[import("typeorm").ConnectionOptions, import("./types").Models]} args
  * @returns {[import("typeorm").ConnectionOptions, import("./types").Models]}
  */
@@ -101,6 +104,7 @@ export const loadConfig = ([config, models]) => {
   return [
     AdapterConfig.default.loadConfig(config, {
       models,
+      // ? expects namingStrategy as options
       namingStrategy: config.namingStrategy,
     }), //
     models,
@@ -112,19 +116,31 @@ export const loadConfig = ([config, models]) => {
  * @returns {[import("typeorm").ConnectionOptions, import("./types").Models]}
  */
 export const transform = ([config, models]) => {
+  // tranform mutates models and options, expects 'namingStrategy' in options (3rd arg),
+  // here we have it in config
   Transform.default(config, models, config);
   return [config, models];
 };
 /**
- *
+ * Prepare initial config/models, 1st transform, converts strings into ... , if neccessary
  * @param {import("typeorm").ConnectionOptions|string} config
  * @param {import("./types").Models|string} models
  * @returns {Promise<[import("typeorm").ConnectionOptions, import("./types").Models]>}
  */
 export const setup = async (config, models) => {
   try {
+    config = typeof config === "string" ? parse(config) : config;
+    // parse adds search params as additional properties, naming strategy could've been set
+    const namingStrategy =
+      typeof config.namingStrategy === "string" &&
+      config.namingStrategy in namingStrategies
+        ? namingStrategies[config.namingStrategy]
+        : config.namingStrategy;
+    if (namingStrategy) {
+      Object.assign(config, { namingStrategy });
+    }
     return [
-      typeof config === "string" ? parse(config) : config,
+      config,
       typeof models === "string" ? await importModels(models) : models,
     ];
   } catch (error) {
@@ -142,13 +158,22 @@ function runner(log) {
   async function run([config, models]) {
     let connection;
     try {
-      // ...
       connection = await typeorm.createConnection(config);
-      for await (const progress of createTables(
-        connection,
-        toTables(models, config)
-      )) {
-        log && (await log("%s: done", progress));
+      if (config.synchronize) {
+        // if "?synchronize=true" just sync
+        await connection.synchronize(
+          // "&dropSchema=true"
+          config.dropSchema
+        );
+        log && log("synchronized.");
+      } else {
+        // ...
+        for await (const progress of createTables(
+          connection,
+          toTables(models, config)
+        )) {
+          log && (await log("%s: done", progress));
+        }
       }
     } catch (error) {
       return Promise.reject(error);

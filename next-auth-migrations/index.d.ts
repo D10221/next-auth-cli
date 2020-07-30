@@ -2,11 +2,12 @@
  *
  * @param {import("./types").Models} models
  * @param {{namingStrategy?: import("typeorm").NamingStrategyInterface, entityPrefix?: string}} [options]
+ * @returns {import("typeorm").Table[]}
  */
 export function toTables(models: import("./types").Models, options?: {
     namingStrategy?: typeorm.NamingStrategyInterface | undefined;
     entityPrefix?: string | undefined;
-} | undefined): typeorm.Table[];
+} | undefined): import("typeorm").Table[];
 /**
  * @param {import("typeorm").ConnectionOptions|string} config
  * @param {import("./types").Models|string} [models]

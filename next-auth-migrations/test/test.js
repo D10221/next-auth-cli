@@ -32,9 +32,9 @@ describe("next-auth-migrations", () => {
       migration
     );
   });
-  it('"setup" populates connection confgiuration from database url', async () => {
+  it('"setup" populates connection configuration from database url', async () => {
     const [config, models] = await setup(
-      "mssql://sa:123@localhost:1422/mydb?xyz=true"
+      "mssql://sa:123@localhost:1422/mydb?entityPrefix=xxx_"
     );
     assert.equal(models, undefined);
     assert.deepEqual(config, {
@@ -44,8 +44,14 @@ describe("next-auth-migrations", () => {
       username: "sa",
       password: "123",
       database: "mydb",
-      xyz: true,
+      entityPrefix: "xxx_",
     });
+  });
+  it('"setup" assigns namingStrategy', async () => {
+    const [config] = await setup(
+      "mssql://sa:123@localhost:1422/mydb?namingStrategy=CamelCaseNamingStrategy"
+    );    
+    assert.equal(config.namingStrategy.name, "CamelCaseNamingStrategy");
   });
   it('loadConfig "sets defaults"', () => {
     const [config, models] = loadConfig([
