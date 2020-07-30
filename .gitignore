@@ -3,3 +3,6 @@
 *.lock
 *.log
 *.log.*
+*.tgz
+*.tar.gz
+*.zip
