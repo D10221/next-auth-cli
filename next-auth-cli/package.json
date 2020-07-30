@@ -1,12 +1,12 @@
 {
-  "name": "next-auth-migrations",
+  "name": "next-auth-cli",
   "description": "Not really a migration tool, but helps you create the tables from 'code first' models",
   "version": "0.1.0-1",
   "type": "module",
   "types": "index.d.ts",
   "module": "index.js",
   "bin": {
-    "next-auth-migrations": "bin/cli.js"
+    "next-auth-cli": "bin/cli.js"
   },
   "author": "Mr D.",
   "license": "MIT",

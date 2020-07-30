@@ -1,0 +1,17 @@
+{
+  "name": "next-auth-cli-demo",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mr D.",
+  "license": "MIT",
+  "dependencies": {
+    "next-auth-cli": "0.1.0-1"
+  },
+  "scripts": {
+    "start": "next-auth-cli",
+    "start:databaseUrl": "next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb2",
+    "start:databaseUrl:models": "next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb2 --models=./models.js",
+    "start:databaseUrl:models:cjs": "next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb2 --models=./models.cjs.js"
+  }  
+}

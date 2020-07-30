@@ -4,7 +4,7 @@ import migration, {
   loadConfig,
   transform,
   toTables,
-} from "next-auth-migrations";
+} from "next-auth-cli";
 import Adapters from "next-auth/adapters.js";
 import typeorm from "typeorm";
 import namingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strategies.js";
@@ -16,19 +16,19 @@ const entities = [
   new typeorm.EntitySchema(Adapters.TypeORM.Models.VerificationRequest.schema),
 ];
 
-describe("next-auth-migrations", () => {
+describe("next-auth-cli", () => {
   it('"module" can be imported', () => {
     assert.equal(migration.name, "nextAuthMigration");
   });
   it('"module" can be dynamically imported', async () => {
     assert.equal(
-      (await import("next-auth-migrations")).default.name,
+      (await import("next-auth-cli")).default.name,
       "nextAuthMigration"
     );
   });
   it('"module" doesn\'t leak imports', async () => {
     assert.strictEqual(
-      (await import("next-auth-migrations")).default,
+      (await import("next-auth-cli")).default,
       migration
     );
   });

@@ -41,7 +41,7 @@ var argv = usage(
       "- Defaults to next-auth Models",
     type: "string",
     alias: "m",
-    normalize: true,
+    // normalize: true,
   },
   env: {
     description: '../path/to/.env-file\ndefaults to "$cwd/.env(.local)?',
@@ -66,7 +66,7 @@ var argv = usage(
       console.error("Missing or empty database url");
       return showHelp();
     }
-    await (await import("next-auth-migrations")).default(url, models);
+    await (await import("next-auth-cli")).default(url, models);
     debug("migration: done");
   } catch (error) {
     console.error(error);

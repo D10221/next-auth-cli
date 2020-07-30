@@ -1,4 +1,4 @@
-# next-auth-migrations
+# next-auth-cli
 
 - next-auth utility
 
@@ -10,7 +10,7 @@ But helps you create the tables from 'code first' models.
 Usage?
 
 ```bash
-node_modules/.bin/next-auth-migrations --databaseUrl=mssql://test:test@localhost:1433/testdb --models=./models.js
+node_modules/.bin/next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb --models=./models.js
 ```
 
 NOTE:  

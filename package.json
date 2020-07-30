@@ -1,7 +1,7 @@
 {  
   "private": true,   
   "workspaces": [
-    "next-auth-migrations",
-    "next-auth-migrations-demo"
+    "next-auth-cli",
+    "next-auth-cli-demo"
   ]
 }
