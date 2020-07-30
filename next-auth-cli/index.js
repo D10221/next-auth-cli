@@ -191,7 +191,7 @@ async function run([config, models]) {
  * @param {import("./types").Models|string} [models]
  * @returns {Promise<void>}
  */
-export default function nextAuthMigration(
+export default function nextAuthCli(
   config,
   models = Adapters.TypeORM.Models
 ) {

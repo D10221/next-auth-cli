@@ -9,9 +9,13 @@
     "next-auth-cli": "0.1.0-1"
   },
   "scripts": {
+    "docker:help": "echo usage:\n\t\"yarn docker <up|down> [-d]\"\n\t will launch \"docker-compose ../docker/docker-compose [...args]\"",
+    "docker": "docker-compose -f ../docker/docker-compose.yml",
+    "docker:up": "docker-compose -f ../docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f ../docker/docker-compose.yml down",
     "start": "next-auth-cli",
-    "start:databaseUrl": "next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb2",
-    "start:databaseUrl:models": "next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb2 --models=./models.js",
-    "start:databaseUrl:models:cjs": "next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb2 --models=./models.cjs.js"
-  }  
+    "start:databaseUrl": "next-auth-cli --databaseUrl=mssql://nexthauth:nexthauth@localhost:1433/nexthauth",
+    "start:databaseUrl:models": "next-auth-cli --databaseUrl=mssql://nexthauth:nexthauth@localhost:1433/nexthauth --models=./models.js",
+    "start:databaseUrl:models:cjs": "next-auth-cli --databaseUrl=mssql://nexthauth:nexthauth@localhost:1433/nexthauth --models=./models.cjs.js"
+  }
 }

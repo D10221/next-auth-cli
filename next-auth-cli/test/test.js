@@ -1,10 +1,5 @@
 import assert from "assert";
-import migration, {
-  setup,
-  loadConfig,
-  transform,
-  toTables,
-} from "next-auth-cli";
+import cli, { setup, loadConfig, transform, toTables } from "next-auth-cli";
 import Adapters from "next-auth/adapters.js";
 import typeorm from "typeorm";
 import namingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strategies.js";
@@ -16,49 +11,51 @@ const entities = [
   new typeorm.EntitySchema(Adapters.TypeORM.Models.VerificationRequest.schema),
 ];
 
+const CONNECTION_STRINGS = {
+  MSSQL: "mssql://sa:Pa55w0rd@localhost:1435/nextauth?entityPrefix=nextauth_",
+  MONGODB: "mssql://sa:Pa55w0rd@localhost:1435/nextauth?entityPrefix=nextauth_",
+  SQLITE: "sqlite://db.sqlite", // ... ?
+  MYSQL: "TODO",
+  POSTGRES: "TODO",
+};
+
 describe("next-auth-cli", () => {
   it('"module" can be imported', () => {
-    assert.equal(migration.name, "nextAuthMigration");
+    assert.equal(cli.name, "nextAuthCli");
   });
   it('"module" can be dynamically imported', async () => {
-    assert.equal(
-      (await import("next-auth-cli")).default.name,
-      "nextAuthMigration"
-    );
+    assert.equal((await import("next-auth-cli")).default.name, "nextAuthCli");
   });
   it('"module" doesn\'t leak imports', async () => {
-    assert.strictEqual(
-      (await import("next-auth-cli")).default,
-      migration
-    );
+    assert.strictEqual((await import("next-auth-cli")).default, cli);
   });
   it('"setup" populates connection configuration from database url', async () => {
     const [config, models] = await setup(
-      "mssql://sa:123@localhost:1422/mydb?entityPrefix=xxx_"
+      "sql://u:p@localhost:1/nextauth?entityPrefix=nextauth_"
     );
     assert.equal(models, undefined);
     assert.deepEqual(config, {
-      type: "mssql",
+      type: "sql",
       host: "localhost",
-      port: 1422,
-      username: "sa",
-      password: "123",
-      database: "mydb",
-      entityPrefix: "xxx_",
+      port: 1,
+      username: "u",
+      password: "p",
+      database: "nextauth",
+      entityPrefix: "nextauth_",
     });
   });
   it('"setup" assigns namingStrategy', async () => {
     const [config] = await setup(
-      "mssql://sa:123@localhost:1422/mydb?namingStrategy=CamelCaseNamingStrategy"
-    );    
+      "anything://user:password@localhost/mydb?namingStrategy=CamelCaseNamingStrategy"
+    );
     assert.equal(config.namingStrategy.name, "CamelCaseNamingStrategy");
   });
   it('loadConfig "sets defaults"', () => {
     const [config, models] = loadConfig([
       {
-        type: "mssql",
+        type: "anything",
         host: "localhost",
-        port: 1422,
+        port: 0,
         username: "sa",
         password: "123",
         database: "mydb",
@@ -74,9 +71,9 @@ describe("next-auth-cli", () => {
         timezone: "Z",
         logging: false,
         namingStrategy: undefined,
-        type: "mssql",
+        type: "anything",
         host: "localhost",
-        port: 1422,
+        port: 0,
         username: "sa",
         password: "123",
         database: "mydb",
@@ -121,5 +118,8 @@ describe("next-auth-cli", () => {
       tables.map((x) => x.name),
       ["accounts", "users", "sessions", "verification_requests"]
     );
+  });
+  it("runs on sqlite", async () => {
+    await cli(CONNECTION_STRINGS.SQLITE);
   });
 });
