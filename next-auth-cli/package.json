@@ -3,8 +3,8 @@
   "description": "Not really a migration tool, but helps you create the tables from 'code first' models",
   "version": "0.1.0-1",
   "type": "module",
-  "types": "index.d.ts",
   "module": "index.js",
+  "types": "types/index.d.ts",
   "bin": {
     "next-auth-cli": "bin/cli.js"
   },
@@ -23,10 +23,12 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
+    "@types/mocha": "^8.0.0",
     "mocha": "^8.0.1",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
+    "pg": "^8.3.0",
     "sqlite3": "^5.0.0",
     "typescript": "^3.9.7"
   },
@@ -48,7 +50,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p .",
+    "build": "rm types -rf && tsc -p .",
     "test": "mocha",
     "docker:help": "echo usage:\n\t\"yarn docker <up|down> [-d]\"\n\t will launch \"docker-compose ../docker/docker-compose [...args]\"",
     "docker": "docker-compose -f ../docker/docker-compose.yml",
@@ -56,8 +58,9 @@
     "docker:down": "docker-compose -f ../docker/docker-compose.yml down"
   },
   "files": [
+    "cli",
     "bin",
-    "index.*",
-    "types.d.ts"
+    "types",
+    "index.*"    
   ]
 }

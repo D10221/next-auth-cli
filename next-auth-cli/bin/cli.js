@@ -4,15 +4,17 @@ import path from "path";
 import dotnev from "dotenv";
 import yargs from "yargs";
 import Debug from "debug";
+import nextAuthCli from "next-auth-cli";
+
 const debug = Debug("next-auth-cli");
 const { usage, showHelp } = yargs;
-// url, quiet, models, help, env: envPath, ci
+
 var argv = usage(
   "Usage:\n $0 [-u <$DATABASE_URL>] [-q] [-c] [-m=</models.js>]"
 ).options({
   url: {
     description:
-      "Driven dependent database url, overrides $DATABASE_URL\n" +
+      "Driver dependent database url, overrides $DATABASE_URL\n" +
       "Typically:\n<driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt>=<val>]]\n" +
       "Required when $DATABASE_URL not present\n" +
       "Wellknown valid options are: \n" +
@@ -66,7 +68,8 @@ var argv = usage(
       console.error("Missing or empty database url");
       return showHelp();
     }
-    await (await import("next-auth-cli")).default(url, models);
+    new URL(url).searchParams
+    await nextAuthCli(url, models);
     debug("migration: done");
   } catch (error) {
     console.error(error);

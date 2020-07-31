@@ -1,14 +1,15 @@
 import assert from "assert";
-import cli, { setup, loadConfig, transform, toTables } from "next-auth-cli";
-import Adapters from "next-auth/adapters.js";
+import cli from "next-auth-cli";
 import typeorm from "typeorm";
-import namingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strategies.js";
-
+import { Models, transform, namingStrategies } from "../cli/next-auth.js";
+import setup from "../cli/setup.js";
+import { loadConfig } from "../cli/next-auth.js";
+import toTables from "../cli/to-tables.js";
 const entities = [
-  new typeorm.EntitySchema(Adapters.TypeORM.Models.User.schema),
-  new typeorm.EntitySchema(Adapters.TypeORM.Models.Account.schema),
-  new typeorm.EntitySchema(Adapters.TypeORM.Models.Session.schema),
-  new typeorm.EntitySchema(Adapters.TypeORM.Models.VerificationRequest.schema),
+  new typeorm.EntitySchema(Models.User.schema),
+  new typeorm.EntitySchema(Models.Account.schema),
+  new typeorm.EntitySchema(Models.Session.schema),
+  new typeorm.EntitySchema(Models.VerificationRequest.schema),
 ];
 
 const CONNECTION_STRINGS = {
@@ -18,15 +19,16 @@ const CONNECTION_STRINGS = {
     "mongodb://nextauth:password@localhost/nextauth?entityPrefix=nextauth_&synchronize=true",
   SQLITE: "sqlite://./temp/db.sqlite", // ... ?
   MYSQL: "mysql://nextauth:password@127.0.0.1:3306/nextauth?synchronize=true",
-  POSTGRES: "postgres://nextauth:password@127.0.0.1:5432/nextauth?synchronize=true",
+  POSTGRES:
+    "postgres://nextauth:password@127.0.0.1:5432/nextauth?synchronize=true",
 };
 
 describe("next-auth-cli", () => {
   it('"module" can be imported', () => {
-    assert.equal(cli.name, "nextAuthCli");
+    assert.equal(cli.name, "Cli");
   });
   it('"module" can be dynamically imported', async () => {
-    assert.equal((await import("next-auth-cli")).default.name, "nextAuthCli");
+    assert.equal((await import("next-auth-cli")).default.name, "Cli");
   });
   it('"module" doesn\'t leak imports', async () => {
     assert.strictEqual((await import("next-auth-cli")).default, cli);
@@ -39,6 +41,7 @@ describe("next-auth-cli", () => {
     assert.deepEqual(config, {
       type: "sql",
       host: "localhost",
+      options: {},
       port: 1,
       username: "u",
       password: "p",
@@ -50,30 +53,32 @@ describe("next-auth-cli", () => {
     const [config] = await setup(
       "anything://user:password@localhost/mydb?namingStrategy=CamelCaseNamingStrategy"
     );
-    assert.equal(config.namingStrategy.name, "CamelCaseNamingStrategy");
+    assert.equal(
+      config.namingStrategy && config.namingStrategy.name,
+      "CamelCaseNamingStrategy"
+    );
   });
   it('loadConfig "sets defaults"', () => {
-    const [config, models] = loadConfig([
-      {
-        type: "anything",
-        host: "localhost",
-        port: 0,
-        username: "sa",
-        password: "123",
-        database: "mydb",
-        xyz: true,
-      },
-      Adapters.TypeORM.Models,
-    ]);
+    /** @type{*} */
+    const input = {     
+      type: "sqlite",
+      host: "localhost",
+      port: 0,
+      username: "sa",
+      password: "123",
+      database: "mydb",
+      xyz: true,
+    };
+    const [config, models] = loadConfig([input, Models]);
     assert.deepEqual(
       {
-        name: "nextauth",
+        type: "sqlite",
         autoLoadEntities: true,
         entities,
         timezone: "Z",
         logging: false,
         namingStrategy: undefined,
-        type: "anything",
+        name: "nextauth",
         host: "localhost",
         port: 0,
         username: "sa",
@@ -89,6 +94,7 @@ describe("next-auth-cli", () => {
     assert.equal(models.VerificationRequest.schema.name, "VerificationRequest");
   });
   it('transform "adds naming stratgy and mutates models"', () => {
+    /** @type {*} */
     const expected = {
       name: "nextauth",
       autoLoadEntities: true,
@@ -104,19 +110,23 @@ describe("next-auth-cli", () => {
       database: "mydb",
       xyz: true,
     };
-    const [config /*, models */] = transform([
-      expected,
-      Adapters.TypeORM.Models,
-    ]);
-    assert.equal(typeof config.namingStrategy.tableName, "function");
-    assert.equal(config.namingStrategy.tableName("thing"), "things");
+    const [config /*, models */] = transform([expected, Models]);
+    assert.equal(
+      config.namingStrategy && typeof config.namingStrategy.tableName,
+      "function"
+    );
+    assert.equal(
+      config.namingStrategy &&
+        config.namingStrategy.tableName &&
+        config.namingStrategy.tableName("thing", undefined),
+      "things"
+    );
   });
   it("converts models to typeorm.Table[] (toTables)", () => {
-    const tables = toTables(Adapters.TypeORM.Models, {
-      namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),
-      entiPrefix: "nextauth_",
+    const tables = toTables(Models, {
+      namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),     
     });
-    assert.deepEqual(
+    assert.deepEqual( 
       tables.map((x) => x.name),
       ["accounts", "users", "sessions", "verification_requests"]
     );
