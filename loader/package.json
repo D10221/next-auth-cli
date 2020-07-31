@@ -9,6 +9,7 @@
     "esm": "^3.2.25"
   },
   "scripts": {
-    "test": "echo TODO"
+    "test": "echo TODO",
+    "build": "echo N/A"
   }
 }

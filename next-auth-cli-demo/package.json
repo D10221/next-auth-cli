@@ -17,6 +17,7 @@
     "docker:up": "yarn workspace next-auth-clil docker:up",
     "docker:down": "yarn workspace next-auth-clil docker:down",
     "start": "next-auth-cli",
-    "test"  : "mocha"
+    "test"  : "mocha",
+    "build": "echo N/A"
   }
 }
