@@ -12,9 +12,11 @@ const entities = [
 ];
 
 const CONNECTION_STRINGS = {
-  MSSQL: "mssql://sa:Pa55w0rd@localhost:1435/nextauth?entityPrefix=nextauth_",
-  MONGODB: "mssql://sa:Pa55w0rd@localhost:1435/nextauth?entityPrefix=nextauth_",
-  SQLITE: "sqlite://db.sqlite", // ... ?
+  MSSQL:
+    "mssql://nextauth:password@localhost:1433/nextauth?entityPrefix=nextauth_",
+  MONGODB:
+    "mongodb://nextauth:password@localhost/nextauth?entityPrefix=nextauth_&synchronize=true",
+  SQLITE: "sqlite://./temp/db.sqlite", // ... ?
   MYSQL: "TODO",
   POSTGRES: "TODO",
 };
@@ -121,5 +123,8 @@ describe("next-auth-cli", () => {
   });
   it("runs on sqlite", async () => {
     await cli(CONNECTION_STRINGS.SQLITE);
+  });
+  it("runs on mongodb", async () => {
+    await cli(CONNECTION_STRINGS.MONGODB);
   });
 });

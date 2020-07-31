@@ -14,20 +14,46 @@
     "esm": "^3.2.25",
     "next-auth": "../next-auth"
   },
-  "optionalPeerDependencies": {
+  "peerDependencies": {
     "mongodb": "^3.5.9",
-    "mssql": "^6.2.1"
+    "mssql": "^6.2.1",
+    "mysql": "^2.18.1",
+    "pg": "^8.3.0",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
     "mocha": "^8.0.1",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
+    "mysql": "^2.18.1",
+    "sqlite3": "^5.0.0",
     "typescript": "^3.9.7"
+  },
+  "peerDependenciesMeta": {
+    "mongodb": {
+      "optional": true
+    },
+    "mssql": {
+      "optional": true
+    },
+    "mysql": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "sqlite3": {
+      "optional": true
+    }
   },
   "scripts": {
     "build": "tsc -p .",
-    "test": "mocha"
+    "test": "mocha",
+    "docker:help": "echo usage:\n\t\"yarn docker <up|down> [-d]\"\n\t will launch \"docker-compose ../docker/docker-compose [...args]\"",
+    "docker": "docker-compose -f ../docker/docker-compose.yml",
+    "docker:up": "docker-compose -f ../docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f ../docker/docker-compose.yml down"
   },
   "files": [
     "bin",
