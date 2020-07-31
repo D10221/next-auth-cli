@@ -1,6 +1,6 @@
 /**
- * DEMO custom Models
- * add a 'password' field to 'users'
+ * DEMO custom Models, ESM format
+ * adds a 'password' field to 'users'
  */
 import Adapters from "next-auth/adapters.js";
 const models = Adapters.TypeORM.Models;

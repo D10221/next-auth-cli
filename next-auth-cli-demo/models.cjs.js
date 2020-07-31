@@ -1,6 +1,6 @@
 /**
  * DEMO custom Models (cjs)
- * add a 'password' field to 'users'
+ * adds a 'password' field to 'users'
  */
 const adapters = require( "next-auth/adapters");
 const models = adapters.TypeORM.Models;
