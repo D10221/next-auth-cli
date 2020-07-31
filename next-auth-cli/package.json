@@ -4,7 +4,7 @@
   "version": "0.1.0-1",
   "type": "module",
   "module": "index.js",
-  "types": "types/index.d.ts",
+  "types": "index.d.ts",
   "bin": {
     "next-auth-cli": "bin/cli.js"
   },
