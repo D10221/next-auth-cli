@@ -1,8 +1,9 @@
 {
-  "name": "next-auth-cli-demo",
+  "name": "next-auth-cli-demo-esm",
   "private": true,
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "module": "index.js",
   "author": "Mr D.",
   "license": "MIT",
   "dependencies": {
@@ -17,6 +18,6 @@
     "docker:up": "yarn workspace next-auth-clil docker:up",
     "docker:down": "yarn workspace next-auth-clil docker:down",
     "start": "next-auth-cli",
-    "test"  : "mocha"
+    "test": "mocha"
   }
 }

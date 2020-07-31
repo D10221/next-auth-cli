@@ -1,10 +1,10 @@
 /**
- * DEMO custom Models (cjs)
+ * DEMO custom Models, ESM format
  * adds a 'password' field to 'users'
  */
-const adapters = require( "next-auth/adapters");
-const models = adapters.TypeORM.Models;
-module.exports = {
+import Adapters from "next-auth/adapters.js";
+const models = Adapters.TypeORM.Models;
+export default {
   ...models,
   User: {
     ...models.User,
@@ -19,4 +19,4 @@ module.exports = {
       },
     },
   },
-}
+};
