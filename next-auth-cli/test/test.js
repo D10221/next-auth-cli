@@ -17,8 +17,8 @@ const CONNECTION_STRINGS = {
   MONGODB:
     "mongodb://nextauth:password@localhost/nextauth?entityPrefix=nextauth_&synchronize=true",
   SQLITE: "sqlite://./temp/db.sqlite", // ... ?
-  MYSQL: "TODO",
-  POSTGRES: "TODO",
+  MYSQL: "mysql://nextauth:password@127.0.0.1:3306/nextauth?synchronize=true",
+  POSTGRES: "postgres://nextauth:password@127.0.0.1:5432/nextauth?synchronize=true",
 };
 
 describe("next-auth-cli", () => {
@@ -126,5 +126,11 @@ describe("next-auth-cli", () => {
   });
   it("runs on mongodb", async () => {
     await cli(CONNECTION_STRINGS.MONGODB);
+  });
+  it("runs on postgres", async () => {
+    await cli(CONNECTION_STRINGS.POSTGRES);
+  });
+  it("runs on mysql", async () => {
+    await cli(CONNECTION_STRINGS.MYSQL);
   });
 });
