@@ -1,4 +1,4 @@
-import { Models, transform, loadConfig } from "./next-auth.js";
+import { Models, transform, loadConfig } from "./internal.js";
 import setup from "./setup.js";
 import sync from "./sync.js";
 /**

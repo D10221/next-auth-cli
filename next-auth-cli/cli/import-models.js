@@ -1,6 +1,6 @@
 import module from "module";
 import path from "path";
-import { Models } from "./next-auth.js";
+import { Models } from "./internal.js";
 /**
  * @param {string} modulePath absolute or relative to cwd
  * @returns {Promise<any>}

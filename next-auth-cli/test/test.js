@@ -1,9 +1,8 @@
 import assert from "assert";
 import cli from "next-auth-cli";
 import typeorm from "typeorm";
-import { Models, transform, namingStrategies } from "../cli/next-auth.js";
+import { loadConfig, Models, namingStrategies, transform } from "../cli/internal.js";
 import setup from "../cli/setup.js";
-import { loadConfig } from "../cli/next-auth.js";
 import toTables from "../cli/to-tables.js";
 const entities = [
   new typeorm.EntitySchema(Models.User.schema),
@@ -60,7 +59,7 @@ describe("next-auth-cli", () => {
   });
   it('loadConfig "sets defaults"', () => {
     /** @type{*} */
-    const input = {     
+    const input = {
       type: "sqlite",
       host: "localhost",
       port: 0,
@@ -124,9 +123,9 @@ describe("next-auth-cli", () => {
   });
   it("converts models to typeorm.Table[] (toTables)", () => {
     const tables = toTables(Models, {
-      namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),     
+      namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),
     });
-    assert.deepEqual( 
+    assert.deepEqual(
       tables.map((x) => x.name),
       ["accounts", "users", "sessions", "verification_requests"]
     );

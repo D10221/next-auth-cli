@@ -1,4 +1,4 @@
-import { namingStrategies, parse } from "./next-auth.js";
+import { namingStrategies, parse } from "./internal.js";
 import importModels from "./import-models.js";
 /**
  * Prepare initial config/models, 1st transform, converts strings into ... , if neccessary
