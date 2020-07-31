@@ -1,5 +1,5 @@
-{  
-  "private": true,   
+{
+  "private": true,
   "workspaces": [
     "next-auth-cli",
     "next-auth-cli-demo"
