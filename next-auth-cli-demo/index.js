@@ -1,5 +1,14 @@
 const assert = require("assert");
-/** It fails, type="module" breaks all compatibility*/
-require = require("esm")(module);
-const nextAuthCli = require("next-auth-cli/index.js").default;
-assert.ok(typeof nextAuthCli === "function");
+async function main() {
+  const { default: nextAuthCli } = await import("next-auth-cli/index.js");
+  assert(typeof nextAuthCli === "function");
+  console.log("OK");
+}
+main()
+  .then(() => {
+    process.exit();
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(-1);
+  });
