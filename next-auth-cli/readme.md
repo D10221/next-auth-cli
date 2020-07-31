@@ -18,7 +18,7 @@ It's pretty much the same as running your project with '?synchronize=true' once.
 
 NOTE:
 
-- Implicit dependencies: 
+- Implicit dependencies: (no cost to use, they were already there) 
   - typeorm:
     - chalk
     - dotenv
