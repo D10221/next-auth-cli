@@ -17,8 +17,7 @@ export default {
             "Typically:\n<driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt>=<val>]]\n" +
             "Wellknown valid options are: \n" +
             "- ?namingStrategy=<supported-next-auth-naming-strategy>\n" +
-            "- ?entityPrefix=<string>\n" +
-            "- ?synchronize=<true|false>",
+            "- ?entityPrefix=<string>\n",
           alias: "u",
           string: true,
           required: true,
@@ -52,16 +51,7 @@ export default {
         dropSchema: {
           alias: "D",
           description: "Drop schema",
-          choices: [true, false, "yes", "no", "y", "n"],
-          // coerce: (dropSchema, args) => {
-          //   if (dropSchema) {
-          //     let url = new URL(args.url);
-          //     url.searchParams.dropSchema =
-          //       dropSchema === true || /^(y|yes|true)$/i.test(dropSchema || "");
-          //     return url.toString();
-          //   }
-          //   return args;
-          // },
+          type: "boolean",
         },
       });
   },

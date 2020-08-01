@@ -23,6 +23,7 @@ export default async function sync([config, models]) {
       }
       await write("\n");
     }
+    // ... proceed
     debug(
       "connecting as %s to %s://%s:%s/%s",
       config.name,
