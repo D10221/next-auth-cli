@@ -9,6 +9,8 @@ import {
 } from "../cli/internal.js";
 import setup from "../cli/setup.js";
 import toTables from "../cli/to-tables.js";
+import fs from "fs";
+import path from "path";
 
 const entities = [
   new typeorm.EntitySchema(Models.User.schema),
@@ -144,8 +146,25 @@ describe("next-auth-cli", () => {
     );
   });
 
-  it("syncs on sqlite", async () => {
-    await cli.sync(CONNECTION_STRINGS.SQLITE);
+  it("syncs on sqlite (FAILS)", async () => {
+    try {
+      let urlPath = CONNECTION_STRINGS.SQLITE.split("sqlite://")[1];
+      urlPath = path.isAbsolute(urlPath)
+        ? urlPath
+        : path.resolve(process.cwd(), urlPath);
+      if (fs.existsSync(urlPath)) {
+        fs.unlinkSync(urlPath);
+      }
+      await cli.sync(CONNECTION_STRINGS.SQLITE);
+      // @ts-ignore
+      const { default: Adapters } = await import("next-auth/adapters.js");
+
+      const a = Adapters.Default(CONNECTION_STRINGS.SQLITE);
+      const b = await a.getAdapter();
+      b.createUser({ name: "bob" });
+    } catch (error) {
+      assert.fail(error.message);
+    }
   });
 
   it("syncs on mongodb", async () => {

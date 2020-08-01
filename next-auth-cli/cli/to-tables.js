@@ -27,6 +27,7 @@ export default function toTables(models, options) {
     return new typeorm.Table({
       ...schema,
       name: tableName,
+      // TODO: apply 'namingStrategy' to columns 
       columns,
       indices,
     });

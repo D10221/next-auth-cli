@@ -1,6 +1,7 @@
 import { Models, transform, loadConfig } from "./internal.js";
 import setup from "./setup.js";
 import sync from "./sync.js";
+import _createTables from "./_createTables.js"
 /** 
  * 
  */
@@ -17,6 +18,17 @@ export default {
       .then(transform)
       .then(extra(etc)) // Merge extra options
       .then(sync),
+  /**
+   * @param {import("./types").ConnectionOptions|string} config
+   * @param {{ models?: import("./types").Models|string} & { [key: string]: any }} [options]
+   * @returns {Promise<void>}
+   */
+  createTables: (config, { models = Models, ...etc } = { models: Models }) =>
+    setup(config, models)
+      .then(loadConfig)
+      .then(transform)
+      .then(extra(etc)) // Merge extra options
+      .then(_createTables),
 };
 /**
  * Merge extra options

@@ -10,7 +10,7 @@ import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
  * @param {string} url
  * @returns {import("./types").ConnectionOptions}
  */
-export function parse(url) {
+export function parse(url) {  
   return AdapterConfig.default.parseConnectionString(url);
 }
 /**
@@ -19,12 +19,13 @@ export function parse(url) {
  * @returns {[import("./types").ConnectionOptions, import("./types").Models]}
  */
 export const loadConfig = ([config, models]) => {
+  const loaded = AdapterConfig.default.loadConfig(config, {
+    models,
+    // ? expects namingStrategy as options
+    namingStrategy: config.namingStrategy,
+  });
   return [
-    AdapterConfig.default.loadConfig(config, {
-      models,
-      // ? expects namingStrategy as options
-      namingStrategy: config.namingStrategy,
-    }), //
+    loaded, //
     models,
   ];
 };
@@ -39,5 +40,6 @@ export const transform = ([config, models]) => {
   Transform.default(config, models, config);
   return [config, models];
 };
-export const Models = Adapters.TypeORM.Models
-export const namingStrategies = NamingStrategies
+/** @type {import("./types").Models} */
+export const Models = Adapters.TypeORM.Models;
+export const namingStrategies = NamingStrategies;

@@ -1,4 +1,4 @@
-import Debug from "./debug";
+import Debug from "./debug.js";
 const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
 /**
  * @param {import("typeorm").Connection} connection

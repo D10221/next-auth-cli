@@ -1,14 +1,16 @@
 import nextAuthCli from "next-auth-cli";
 import Debug from "next-auth-cli/cli/debug.js";
-export const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
+export const debug = Debug(
+  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+);
 /** run */
 export default {
-  name: "sync",
+  name: "create-tables",
   describe: '"synchronize database models"',
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
     yargs
-      .usage("sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]")      
+      .usage("sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]")
       .options({
         dbUrl: {
           description:
@@ -69,7 +71,7 @@ export default {
         console.error("Missing or empty database dbUrl");
         return (await import("yargs")).showHelp();
       }
-      await nextAuthCli.sync(dbUrl, { models, dropSchema, quiet });
+      await nextAuthCli.createTables(dbUrl, { models, dropSchema, quiet });
       debug("Sync: done");
       process.exit();
     } catch (error) {

@@ -2,7 +2,9 @@ import typeorm from "typeorm";
 import Debug from "./debug.js";
 import util from "util";
 import chalk from "chalk";
-export const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
+const debug = Debug(
+  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+);
 /**
  * @param {[import("./types").ConnectionOptions, import("./types").Models ]} args
  * @returns {Promise<void>}
@@ -43,7 +45,9 @@ export default async function sync([config, models]) {
     return Promise.reject(error);
   } finally {
     if (connection && connection.isConnected) {
-      connection.close();
+      await connection.close().catch(() => {
+        /* noop */
+      });
     }
   }
 }
