@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-import yargs from "yargs";
-import sync from "./sync.js";
-import fs from "fs";
-import path from "path";
 import dotnev from "dotenv";
-import Debug from "debug";
-const debug = Debug("next-auth-cli");
+import fs from "fs";
+import sync from "next-auth-cli/bin/sync-cmd.js";
+import Debug from "next-auth-cli/cli/debug.js";
+import path from "path";
+import yargs from "yargs";
+const debug = Debug(import.meta.url);
 const cwd = process.cwd();
 debug("cwd: ", cwd);
 debug(

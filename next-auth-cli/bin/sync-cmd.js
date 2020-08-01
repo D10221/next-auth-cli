@@ -1,6 +1,6 @@
 import nextAuthCli from "next-auth-cli";
-import Debug from "debug";
-export const debug = Debug("next-auth-cli/sync");
+import Debug from "next-auth-cli/cli/debug.js";
+export const debug = Debug(import.meta.url);
 /** run */
 export default {
   name: "sync",
@@ -49,6 +49,20 @@ export default {
           alias: "m",
           // normalize: true,
         },
+        dropSchema: {
+          alias: "D",
+          description: "Drop schema",
+          choices: [true, false, "yes", "no", "y", "n"],
+          // coerce: (dropSchema, args) => {
+          //   if (dropSchema) {
+          //     let url = new URL(args.url);
+          //     url.searchParams.dropSchema =
+          //       dropSchema === true || /^(y|yes|true)$/i.test(dropSchema || "");
+          //     return url.toString();
+          //   }
+          //   return args;
+          // },
+        },
       });
   },
   handler: async ({
@@ -56,6 +70,7 @@ export default {
     quiet = Boolean(process.env.CI),
     models,
     help,
+    dropSchema,
     ...etc
   }) => {
     try {
@@ -65,9 +80,8 @@ export default {
         console.error("Missing or empty database url");
         return (await import("yargs")).showHelp();
       }
-      new URL(url).searchParams;
-      await nextAuthCli.sync(url, models);
-      debug("migration: done");
+      await nextAuthCli.sync(url, { models, dropSchema, quiet });
+      debug("Sync: done");
       process.exit();
     } catch (error) {
       console.error(error);

@@ -72,6 +72,14 @@ $ next-auth-cli seed --help
 $ TODO:
 ```
 
+## Debug
+___
+```sh
+# namespaced
+DEBUG=next-auth-cli:*
+```
+
+
 ## NOTES:
 
 ---
@@ -82,10 +90,7 @@ DEV NOTES:
 
 - Implicit dependencies: (no cost to use, they were already there)
 - Why yargs: Implicit dependencies, no cos, it was were already, brought in by tyeporm.
-- Why debug as logger? IDK why I like to do that
 - Why esm modules?
   - Keep it simple, no build step
 - Why Build then ?
   - Only generates types, better than typing them by hand
-
-

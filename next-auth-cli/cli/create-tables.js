@@ -1,5 +1,5 @@
-import Debug from "debug";
-const debug = Debug("next-auth-cli/create-tables");
+import Debug from "./debug";
+const debug = Debug(import.meta.url);
 /**
  * @param {import("typeorm").Connection} connection
  * @param {import("typeorm").Table[]} tables
