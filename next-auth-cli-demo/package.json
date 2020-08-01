@@ -12,10 +12,10 @@
     "mocha": "^8.0.1"
   },
   "scripts": {
-    "docker": "yarn workspace next-auth-clil docker",
-    "docker:help": "yarn workspace next-auth-clil docker:help",
-    "docker:up": "yarn workspace next-auth-clil docker:up",
-    "docker:down": "yarn workspace next-auth-clil docker:down",
+    "docker": "yarn workspace next-auth-cli docker",
+    "docker:help": "yarn workspace next-auth-cli docker:help",
+    "docker:up": "yarn workspace next-auth-cli docker:up",
+    "docker:down": "yarn workspace next-auth-cli docker:down",
     "start": "next-auth-cli",
     "test"  : "mocha",
     "build": "echo N/A"

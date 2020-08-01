@@ -39,7 +39,5 @@ export const transform = ([config, models]) => {
   Transform.default(config, models, config);
   return [config, models];
 };
-// re exporting
 export const Models = Adapters.TypeORM.Models
-/** type{*} */
 export const namingStrategies = NamingStrategies

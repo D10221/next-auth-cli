@@ -1,6 +1,6 @@
 {
   "name": "next-auth-cli",
-  "description": "Not really a migration tool, but helps you create the tables from 'code first' models",
+  "description": "next-auth command line utility",
   "version": "0.1.0-1",
   "type": "module",
   "module": "index.js",
@@ -55,7 +55,10 @@
     "docker:help": "echo usage:\n\t\"yarn docker <up|down> [-d]\"\n\t will launch \"docker-compose ../docker/docker-compose [...args]\"",
     "docker": "docker-compose -f ../docker/docker-compose.yml",
     "docker:up": "docker-compose -f ../docker/docker-compose.yml up -d",
-    "docker:down": "docker-compose -f ../docker/docker-compose.yml down"
+    "docker:down": "docker-compose -f ../docker/docker-compose.yml down",
+    "start": "node",
+    "debug": "node --inspect bin/cli.js ",
+    "debug:brk": "node --inspect bin/cli.js "
   },
   "files": [
     "cli",

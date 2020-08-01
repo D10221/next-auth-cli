@@ -1,28 +1,91 @@
-# next-auth-cli
+# next-auth-cli (wip)
 
-- next-auth utility
-
-:::  
-Not really a migration tool.  
-But helps you create the tables from 'code first' models.  
-:::
+_[next-auth](https://next-auth.js.org) command line utility_
 
 Usage?
 
 ```bash
-node_modules/.bin/next-auth-cli --databaseUrl=mssql://test:test@localhost:1433/testdb --models=./models.js
+node_modules/.bin/next-auth-cli --help
 ```
 
-NOTE:  
-It's pretty much the same as running your project with '?synchronize=true' once.
+```
+Usage:
+ next-auth-cli <cmd> [args]
 
-NOTE:
+Commands:
+  next-auth-cli sync  "synchronize database models"
 
-- Implicit dependencies: (no cost to use, they were already there) 
-  - typeorm:
-    - chalk
-    - dotenv
-    - debug
-    - yargs
+Options:
+  --help     Show help                                         [boolean]  --version  Show version number                               [boolean]
+```
 
-NOTE: (wip)
+## SYNC
+
+_Syncs your models with the database_
+
+---
+
+```
+$ next-auth-cli sync --help
+```
+
+```
+sync [-u <$NEXTAUTH_URL>] [-q] [-c] [-m=</models.js>]
+
+Options:
+  --help        Show help                                              [boolean]
+  --version     Show version number                                    [boolean]
+  --url, -u     Driver dependent database url
+                Typically:
+                <driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt
+                >=<val>]]
+                Wellknown valid options are:
+                - ?namingStrategy=<supported-next-auth-naming-strategy>
+                - ?entityPrefix=<string>
+                - ?synchronize=<true|false>                  [string] [required]
+  --quiet, -q   Be quiet                                               [boolean]
+  --ci, -c      same as --quiet, overrides $CI                         [boolean]
+  --models, -m  ../path/to/my/models.js
+                - As default export
+                - Absolute or relative to cwd.
+                - Defaults to next-auth Models                          [string]
+```
+
+### Notes:
+
+- env vars mapping, url defaults to \$NEXTAUTH_URL:
+- url options to config mapping
+- namingStrategy lookup
+- custom models, from module `{...models}|(models)=>({...models})`
+###### WARN: models import, is quite green
+
+## SEED _(TODO)_
+
+---
+
+_seed models with your data_
+
+```
+$ next-auth-cli seed --help
+```
+```
+$ TODO:
+```
+
+## NOTES:
+
+---
+
+'sync' It's pretty much the same as running your project with '?synchronize=true' once.
+
+DEV NOTES:
+
+- Implicit dependencies: (no cost to use, they were already there)
+- Why yargs: Implicit dependencies, no cos, it was were already, brought in by tyeporm.
+- Why debug as logger? IDK why I like to do that
+- Why esm modules?
+  - Keep it simple, no build step
+- Why Build then ?
+  - Only generates types, better than typing them by hand
+
+

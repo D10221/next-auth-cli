@@ -3,21 +3,20 @@ const assert = require("assert");
 describe("next-auth-cli-demo (cjs)", () => {
   it("can be imported", async () => {
     const { default: nextAuthCli } = await import("next-auth-cli");
-    assert.ok(typeof nextAuthCli === "function");
+    assert.equal(nextAuthCli.name, "next-auth-cli");
   });
   it("can't be required", () => {
+    // noway to require an package with type module from cjs module    
     let error;
     try {
       const loader = require("@local/loader");
-      /** It fails, type="module" breeaks all compatibility*/
+      /** It fails, type="module" breaks all compatibility*/
       const nextAuthCli = loader(require, module)("next-auth-cli/index.js")
         .default;
-      assert.ok(typeof nextAuthCli === "function");
+      assert.equal(nextAuthCli.name, "next-auth-cli");
     } catch (e) {
       error = e;
     }
-    assert.ok(error instanceof Error);
-    console.log("told you.");
-    console.error(error);
+    assert.ok(error instanceof Error);        
   });
 });

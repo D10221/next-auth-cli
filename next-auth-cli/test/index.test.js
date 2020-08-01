@@ -1,9 +1,15 @@
 import assert from "assert";
 import cli from "next-auth-cli";
 import typeorm from "typeorm";
-import { loadConfig, Models, namingStrategies, transform } from "../cli/internal.js";
+import {
+  loadConfig,
+  Models,
+  namingStrategies,
+  transform,
+} from "../cli/internal.js";
 import setup from "../cli/setup.js";
 import toTables from "../cli/to-tables.js";
+
 const entities = [
   new typeorm.EntitySchema(Models.User.schema),
   new typeorm.EntitySchema(Models.Account.schema),
@@ -24,14 +30,17 @@ const CONNECTION_STRINGS = {
 
 describe("next-auth-cli", () => {
   it('"module" can be imported', () => {
-    assert.equal(cli.name, "Cli");
+    assert.equal(cli.name, "next-auth-cli");
   });
+
   it('"module" can be dynamically imported', async () => {
-    assert.equal((await import("next-auth-cli")).default.name, "Cli");
+    assert.equal((await import("next-auth-cli")).default.name, "next-auth-cli");
   });
+
   it('"module" doesn\'t leak imports', async () => {
     assert.strictEqual((await import("next-auth-cli")).default, cli);
   });
+
   it('"setup" populates connection configuration from database url', async () => {
     const [config, models] = await setup(
       "sql://u:p@localhost:1/nextauth?entityPrefix=nextauth_"
@@ -48,6 +57,7 @@ describe("next-auth-cli", () => {
       entityPrefix: "nextauth_",
     });
   });
+
   it('"setup" assigns namingStrategy', async () => {
     const [config] = await setup(
       "anything://user:password@localhost/mydb?namingStrategy=CamelCaseNamingStrategy"
@@ -57,6 +67,7 @@ describe("next-auth-cli", () => {
       "CamelCaseNamingStrategy"
     );
   });
+
   it('loadConfig "sets defaults"', () => {
     /** @type{*} */
     const input = {
@@ -92,6 +103,7 @@ describe("next-auth-cli", () => {
     assert.equal(models.Session.schema.name, "Session");
     assert.equal(models.VerificationRequest.schema.name, "VerificationRequest");
   });
+
   it('transform "adds naming stratgy and mutates models"', () => {
     /** @type {*} */
     const expected = {
@@ -121,6 +133,7 @@ describe("next-auth-cli", () => {
       "things"
     );
   });
+
   it("converts models to typeorm.Table[] (toTables)", () => {
     const tables = toTables(Models, {
       namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),
@@ -130,16 +143,20 @@ describe("next-auth-cli", () => {
       ["accounts", "users", "sessions", "verification_requests"]
     );
   });
-  it("runs on sqlite", async () => {
-    await cli(CONNECTION_STRINGS.SQLITE);
+
+  it("syncs on sqlite", async () => {
+    await cli.sync(CONNECTION_STRINGS.SQLITE);
   });
-  it("runs on mongodb", async () => {
-    await cli(CONNECTION_STRINGS.MONGODB);
+
+  it("syncs on mongodb", async () => {
+    await cli.sync(CONNECTION_STRINGS.MONGODB);
   });
-  it("runs on postgres", async () => {
-    await cli(CONNECTION_STRINGS.POSTGRES);
+
+  it("syncs on postgres", async () => {
+    await cli.sync(CONNECTION_STRINGS.POSTGRES);
   });
-  it("runs on mysql", async () => {
-    await cli(CONNECTION_STRINGS.MYSQL);
+
+  it("syncs on mysql", async () => {
+    await cli.sync(CONNECTION_STRINGS.MYSQL);
   });
 });
