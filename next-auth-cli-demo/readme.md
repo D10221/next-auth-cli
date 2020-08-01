@@ -7,7 +7,7 @@
 ```
 #2 Try demo
 ```
-yarn start sync --url=$NEXTAUTH_UR [...options]
+yarn start <command> [...options]
 ```
 #3 Stop docker
 ```

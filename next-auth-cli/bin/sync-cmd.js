@@ -1,6 +1,6 @@
 import nextAuthCli from "next-auth-cli";
 import Debug from "next-auth-cli/cli/debug.js";
-export const debug = Debug(import.meta.url);
+export const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
 /** run */
 export default {
   name: "sync",
@@ -8,12 +8,12 @@ export default {
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
     yargs
-      .usage("sync [-u <$NEXTAUTH_URL>] [-q] [-c] [-m=</models.js>]")
+      .usage("sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]")
       .env("NEXTAUTH_")
       .options({
-        url: {
+        dbUrl: {
           description:
-            "Driver dependent database url\n" +
+            "Driver dependent database Url\n" +
             "Typically:\n<driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt>=<val>]]\n" +
             "Wellknown valid options are: \n" +
             "- ?namingStrategy=<supported-next-auth-naming-strategy>\n" +
@@ -56,7 +56,7 @@ export default {
       });
   },
   handler: async ({
-    url,
+    dbUrl,
     quiet = Boolean(process.env.CI),
     models,
     help,
@@ -65,12 +65,12 @@ export default {
   }) => {
     try {
       if (!quiet) debug.enabled = true;
-      if (!url) {
-        if (quiet) throw new Error("Missing or empty database url");
-        console.error("Missing or empty database url");
+      if (!dbUrl) {
+        if (quiet) throw new Error("Missing or empty database dbUrl");
+        console.error("Missing or empty database dbUrl");
         return (await import("yargs")).showHelp();
       }
-      await nextAuthCli.sync(url, { models, dropSchema, quiet });
+      await nextAuthCli.sync(dbUrl, { models, dropSchema, quiet });
       debug("Sync: done");
       process.exit();
     } catch (error) {

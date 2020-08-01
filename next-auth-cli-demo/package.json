@@ -16,8 +16,10 @@
     "docker:help": "yarn workspace next-auth-cli docker:help",
     "docker:up": "yarn workspace next-auth-cli docker:up",
     "docker:down": "yarn workspace next-auth-cli docker:down",
-    "start": "next-auth-cli",
+    "start": "next-auth-cli --models=./models.js",
     "test"  : "mocha",
-    "build": "echo N/A"
+    "build": "echo N/A",
+    "debug": "node --inspect ../node_modules/next-auth-cli/bin/cli.js",
+    "debug:brk": "node --inspect-brk ../node_modules/next-auth-cli/bin/cli.js"
   }
 }

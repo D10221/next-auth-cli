@@ -5,7 +5,7 @@ import sync from "next-auth-cli/bin/sync-cmd.js";
 import Debug from "next-auth-cli/cli/debug.js";
 import path from "path";
 import yargs from "yargs";
-const debug = Debug(import.meta.url);
+const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
 const cwd = process.cwd();
 debug("cwd: ", cwd);
 debug(

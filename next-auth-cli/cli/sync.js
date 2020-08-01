@@ -2,7 +2,7 @@ import typeorm from "typeorm";
 import Debug from "./debug.js";
 import util from "util";
 import chalk from "chalk";
-export const debug = Debug(import.meta.url);
+export const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
 /**
  * @param {[import("./types").ConnectionOptions, import("./types").Models ]} args
  * @returns {Promise<void>}
@@ -11,6 +11,7 @@ export default async function sync([config, models]) {
   let connection;
   try {
     if (config.dropSchema && !config.quiet) {
+      // TODO: Move this Up on the chain, apply only to cli usage
       const { writeInLine, write } = asyncConsole();
       for await (const count of countDown(5, 1000)) {
         await writeInLine(

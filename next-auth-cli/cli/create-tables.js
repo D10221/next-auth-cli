@@ -1,5 +1,5 @@
 import Debug from "./debug";
-const debug = Debug(import.meta.url);
+const debug = Debug(import.meta.url || (typeof  module !== "undefined" && module.filename) || "" );
 /**
  * @param {import("typeorm").Connection} connection
  * @param {import("typeorm").Table[]} tables

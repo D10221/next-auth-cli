@@ -31,7 +31,7 @@ $ next-auth-cli sync --help
 ```
 
 ```
-sync [-u <$NEXTAUTH_URL>] [-q] [-c] [-m=</models.js>]
+sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]
 
 Options:
   --help        Show help                                              [boolean]
@@ -54,7 +54,7 @@ Options:
 
 ### Notes:
 
-- env vars mapping, url defaults to \$NEXTAUTH_URL:
+- env vars mapping, url defaults to \$NEXTAUTH_DB_URL:
 - url options to config mapping
 - ```namingStrategy``` lookup
 - custom models (wip), from module `{...models}|(models)=>({...models})`
