@@ -30,7 +30,7 @@ const sync = (config, { models = Models, ...etc } = { models: Models }) =>
           debug("synchronizing");
           config.synchronize = true;
           const adapter = await Adapter(config, {}).getAdapter();
-          await adapter.getUser();
+          await adapter.getUser().catch(Debug);
         } catch (error) {
           return Promise.reject(error);
         }

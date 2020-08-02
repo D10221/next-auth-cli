@@ -153,30 +153,17 @@ describe("next-auth-cli", () => {
       ["accounts", "users", "sessions", "verification_requests"]
     );
   });
-
-  it("syncs on sqlite (FAILS)", async () => {
-    try {
-      await cli.sync(CONNECTION_STRINGS.SQLITE);
-      // @ts-ignore
-      const { default: Adapters } = await import("next-auth/adapters.js");
-
-      const a = Adapters.Default(CONNECTION_STRINGS.SQLITE);
-      const b = await a.getAdapter();
-      b.createUser({ name: "bob" });
-    } catch (error) {
-      assert.fail(error.message);
-    }
-  });
-
-  it("syncs on mongodb", async () => {
-    await cli.sync(CONNECTION_STRINGS.MONGODB);
-  });
-
-  it("syncs on postgres", async () => {
-    await cli.sync(CONNECTION_STRINGS.POSTGRES);
-  });
-
-  it("syncs on mysql", async () => {
-    await cli.sync(CONNECTION_STRINGS.MYSQL);
-  });
+  // Test Only sqlite on unit test? 
+  // Test other adapter with shell, isolate process ? 
+  for (const key of Object.keys(CONNECTION_STRINGS)) {
+    it("syncs", async () => {
+      try {
+        // Need to reset Config?
+        await cli.dropDatabase(CONNECTION_STRINGS[key]);
+        await cli.sync(CONNECTION_STRINGS[key]);
+      } catch (error) {
+        assert.fail(`${key} sync FAILED`);
+      }
+    });
+  }
 });
