@@ -24,11 +24,19 @@ const CONNECTION_STRINGS = {
     "mssql://nextauth:password@localhost:1433/nextauth?entityPrefix=nextauth_",
   MONGODB:
     "mongodb://nextauth:password@localhost/nextauth?entityPrefix=nextauth_&synchronize=true",
-  SQLITE: "sqlite://./temp/db.sqlite", // ... ?
+  SQLITE: "sqlite://./temp/nextauth.sqlite",
   MYSQL: "mysql://nextauth:password@127.0.0.1:3306/nextauth?synchronize=true",
   POSTGRES:
     "postgres://nextauth:password@127.0.0.1:5432/nextauth?synchronize=true",
 };
+// reset sqlite file
+let urlPath = CONNECTION_STRINGS.SQLITE.split("sqlite://")[1];
+urlPath = path.isAbsolute(urlPath)
+  ? urlPath
+  : path.resolve(process.cwd(), urlPath);
+if (fs.existsSync(urlPath)) {
+  fs.unlinkSync(urlPath);
+}
 
 describe("next-auth-cli", () => {
   it('"module" can be imported', () => {
@@ -148,13 +156,6 @@ describe("next-auth-cli", () => {
 
   it("syncs on sqlite (FAILS)", async () => {
     try {
-      let urlPath = CONNECTION_STRINGS.SQLITE.split("sqlite://")[1];
-      urlPath = path.isAbsolute(urlPath)
-        ? urlPath
-        : path.resolve(process.cwd(), urlPath);
-      if (fs.existsSync(urlPath)) {
-        fs.unlinkSync(urlPath);
-      }
       await cli.sync(CONNECTION_STRINGS.SQLITE);
       // @ts-ignore
       const { default: Adapters } = await import("next-auth/adapters.js");

@@ -1,3 +1,7 @@
+import Debug from "./debug.js";
+const debug = Debug(
+  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+);
 import typeorm from "typeorm";
 /**
  *
@@ -7,27 +11,36 @@ import typeorm from "typeorm";
  */
 export default function toTables(models, options) {
   const { namingStrategy, entityPrefix } = options || {};
+
   return Object.values(models).map(({ schema }) => {
-    const columns = Object.keys(schema.columns).map((key) => ({
-      name: key,
-      ...schema.columns[key],
-    }));
-    const indices = (Array.isArray(schema.indices) &&
-      schema.indices.map((index) => ({
-        ...index,
-        columnNames: index.columns,
-      }))) ||
-      [];
     const tableName = namingStrategy
       ? namingStrategy.tableName(
-        schema.name,
-        entityPrefix && `${entityPrefix}${schema.name}`
-      )
+          schema.name,
+          entityPrefix && `${entityPrefix}${schema.name}`
+        )
       : schema.name;
+
+    const columns = Object.keys(schema.columns).map((key) => {
+      const column = schema.columns[key];      
+      // const columnName =(namingStrategy && namingStrategy.columnName(key, undefined, [])) || key;
+      // debug("%s [%s] - %s [%s]:", schema.name, tableName, key, columnName, column);
+      return {
+        name: key, // columnName,
+        ...column,
+      };
+    });
+
+    const indices =
+      (Array.isArray(schema.indices) &&
+        schema.indices.map((index) => ({
+          ...index,
+          columnNames: index.columns,
+        }))) ||
+      [];
     return new typeorm.Table({
       ...schema,
       name: tableName,
-      // TODO: apply 'namingStrategy' to columns 
+      // TODO: apply 'namingStrategy' to columns
       columns,
       indices,
     });

@@ -58,7 +58,7 @@
     "docker:down": "docker-compose -f ../docker/docker-compose.yml down",
     "start": "node bin/cli.js",
     "debug": "node --inspect bin/cli.js",
-    "debug:brk": "node --inspect bin/cli.js "
+    "debug:brk": "node --inspect-brk bin/cli.js "
   },
   "files": [
     "cli",

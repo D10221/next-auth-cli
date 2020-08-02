@@ -3,15 +3,17 @@ import Debug from "next-auth-cli/cli/debug.js";
 export const debug = Debug(
   import.meta.url || (typeof module !== "undefined" && module.filename) || ""
 );
-const name = "create-tables";
+const name = "drop-database";
 /** run */
 export default {
   name,
-  describe: '"synchronize database models"',
+  describe: '"Drop database"',
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
     yargs
-      .usage("sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]")
+      .usage(
+        "drop-database [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]"
+      )
       .options({
         dbUrl: {
           description:
@@ -50,21 +52,8 @@ export default {
           alias: "m",
           // normalize: true,
         },
-        dropTables: {
-          alias: "D",
-          description: "Drop schema (tables, indices, fkeys)",
-          type: "boolean",
-        },
-        createForeignKeys: {
-          description: "Create Foreign Keys (false)",
-          type: "boolean",
-        },
-        createIndices: {
-          description: "Create Indices (if indices)",
-          type: "boolean",
-        },
-        transaction: {
-          description: "Create transaction (true)",
+        createDatabase: {
+          description: "create database after drop",
           type: "boolean",
         },
       });
@@ -73,28 +62,15 @@ export default {
     dbUrl,
     quiet = Boolean(process.env.CI),
     models,
-    help,
-    dropTables,
-    createForeignKeys,
-    createIndices,
-    transaction,
-    ...etc
+    createDatabase,
   }) => {
     try {
-      // if(Object.keys(etc).length){throw new Error(`Unknown option: ${Object.keys(etc).join()}`)}
       if (!quiet) debug.enabled = true;
-      if (!dbUrl) {
-        if (quiet) throw new Error("Missing or empty database dbUrl");
-        console.error("Missing or empty database dbUrl");
-        return (await import("yargs")).showHelp();
-      }
-      await nextAuthCli.createTables(dbUrl, {
+      await nextAuthCli.dropDatabase(dbUrl, {
         models,
-        dropTables,
         quiet,
-        createForeignKeys,
-        createIndices,
-        transaction,
+        createDatabase,
+        dropDatabase: true
       });
       debug("done");
       process.exit();

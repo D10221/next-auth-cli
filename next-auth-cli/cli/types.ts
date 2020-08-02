@@ -8,9 +8,7 @@ export type Models = {
     schema: {
       name: string;
       columns: {
-        [key: string]: {
-          type: string;
-        };
+        [key: string]: any;
       };
       indices: {
         columns: string[];

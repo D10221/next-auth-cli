@@ -79,18 +79,39 @@ ___
 DEBUG=next-auth-cli:*
 ```
 
-
 ## NOTES:
 
 ---
 
 'sync' It's pretty much the same as running your project with '?synchronize=true' once.
 
-DEV NOTES:
+## DEV:
+---
+### "scripts": 
+```bash
+# Launch cli 
+yarn start <next-auth-cli-args> 
+# Launch cli with debugger  
+yarn debug <next-auth-cli-args> 
+# Launch cli, stop on entry 
+yarn debug:brk <next-auth-cli-args> 
+# Launch cli, stop on entry
+yarn debug:brk <next-auth-cli-args> 
+# Generate types
+yarn build
+# Unit tests
+yarn test
+# Docker
+yarn docker <up|down> [-d] ...etc
+yarn docker:up 
+yarn docker:down
+
+```
+### random
 
 - Implicit dependencies: (no cost to use, they were already there)
-- Why yargs: Implicit dependencies, no cos, it was were already, brought in by tyeporm.
+- Why yargs: Implicit dependencies, no cost, it was were already, brought in by tyeporm.
 - Why esm modules?
   - Keep it simple, no build step
-- Why Build then ?
+- Why 'build' then ?
   - Only generates types, better than typing them by hand

@@ -4,6 +4,9 @@ import { Models } from "./internal.js";
 /**
  * @param {string} modulePath absolute or relative to cwd
  * @returns {Promise<any>}
+ * this is the closest way I found to a reliably import external scripts on cjs/esm formats
+ * IMPORTANT: the importing modulee must be a module
+ * if importing module is cjs, the 'must require because your not a module' can of worms will eat you
  */
 export default async function importModels(modulePath) {
   const relativePath = modulePath.startsWith(".")
