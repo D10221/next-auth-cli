@@ -6,4 +6,5 @@
 *.tgz
 *.tar.gz
 *.zip
+*.local
 **/temp/*
