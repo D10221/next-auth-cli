@@ -1,6 +1,11 @@
 import Debug from "./debug.js";
 import delayDrop from "./delay-drop.js";
-import { loadConfig, Models, transform } from "./internal.js";
+import {
+  loadConfig,
+  Models,
+  transform,
+  updateConnectionEntities,
+} from "./internal.js";
 import setup from "./setup.js";
 import toTables from "./to-tables.js";
 import withConnection from "./with-connection.js";
@@ -22,6 +27,8 @@ const sync = (config, { models = Models, ...etc } = { models: Models }) =>
         withConnection(async (connection, config, models) => {
           try {
             debug("synchronizing");
+            // Why SYNC Doesn't create tables ? 
+            await updateConnectionEntities(connection, config.entities);
             await connection.synchronize(
               // "&dropSchema=true|yes|YES?"
               config.dropSchema

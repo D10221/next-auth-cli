@@ -6,11 +6,13 @@ import AdapterConfig from "next-auth/dist/adapters/typeorm/lib/config.js";
 import NamingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strategies.js";
 // @ts-ignore
 import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
+// @ts-ignore
+import NextAuthUtils from "next-auth/dist/adapters/typeorm/lib/utils.js";
 /**
  * @param {string} url
  * @returns {import("./types").ConnectionOptions}
  */
-export function parse(url) {  
+export function parse(url) {
   return AdapterConfig.default.parseConnectionString(url);
 }
 /**
@@ -43,3 +45,9 @@ export const transform = ([config, models]) => {
 /** @type {import("./types").Models} */
 export const Models = Adapters.TypeORM.Models;
 export const namingStrategies = NamingStrategies;
+/**
+ * @param {import("typeorm").Connection} connection
+ * @param {*} entities
+ */
+export const updateConnectionEntities = (connection, entities) =>
+  NextAuthUtils.updateConnectionEntities(connection, entities);

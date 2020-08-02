@@ -14,8 +14,8 @@ export default function delayDropSchema(next) {
       const droppingKeys = Object.keys(config).filter((key) =>
         /^drop\w+$/.test(key)
       );
-      if (droppingKeys.length && !config.quiet) {
-        // TODO: Move this Up on the chain, apply only to cli usage
+      const drops = droppingKeys.some(key=> Boolean(config[key]))
+      if (drops && !config.quiet) {
         const { writeInLine, write } = asyncConsole();
         for await (const count of countDown(5, 1000)) {
           await writeInLine(
