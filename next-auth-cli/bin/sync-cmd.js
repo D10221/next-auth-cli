@@ -60,7 +60,7 @@ export default {
   handler: async ({
     dbUrl,
     quiet = Boolean(process.env.CI),
-    models,    
+    models,
     dropSchema,
   }) => {
     try {

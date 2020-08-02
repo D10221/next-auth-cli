@@ -51,3 +51,4 @@ export const namingStrategies = NamingStrategies;
  */
 export const updateConnectionEntities = (connection, entities) =>
   NextAuthUtils.updateConnectionEntities(connection, entities);
+export const Adapter = Adapters.TypeORM.Adapter;

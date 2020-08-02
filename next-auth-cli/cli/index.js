@@ -5,6 +5,7 @@ import {
   Models,
   transform,
   updateConnectionEntities,
+  Adapter,
 } from "./internal.js";
 import setup from "./setup.js";
 import toTables from "./to-tables.js";
@@ -13,6 +14,7 @@ import withOptions from "./with-options.js";
 /** */
 const debug = Debug("");
 /**
+ * Try sync with adapter
  * @param {import("./types").ConnectionOptions|string} config
  * @param {{ models?: import("./types").Models|string} & { [key: string]: any }} [options]
  * @returns {Promise<void>}
@@ -23,21 +25,16 @@ const sync = (config, { models = Models, ...etc } = { models: Models }) =>
     .then(transform)
     .then(withOptions(etc)) // Merge extra options
     .then(
-      delayDrop(
-        withConnection(async (connection, config, models) => {
-          try {
-            debug("synchronizing");
-            // Why SYNC Doesn't create tables ? 
-            await updateConnectionEntities(connection, config.entities);
-            await connection.synchronize(
-              // "&dropSchema=true|yes|YES?"
-              config.dropSchema
-            );
-          } catch (error) {
-            return Promise.reject(error);
-          }
-        })
-      )
+      delayDrop(async ([{ quiet, ...config }, models]) => {
+        try {
+          debug("synchronizing");
+          config.synchronize = true;
+          const adapter = await Adapter(config, {}).getAdapter();
+          await adapter.getUser();
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      })
     );
 /**
  * @description creates from next-auth models
