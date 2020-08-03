@@ -1,7 +1,7 @@
 import typeorm from "typeorm";
 import Debug from "./debug.js";
 const debug = Debug(
-  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+  import.meta
 );
 /**
  * @param {(con: import("typeorm").Connection, config: import("./types").ConnectionOptions, models: import("./types").Models)=> any} callback

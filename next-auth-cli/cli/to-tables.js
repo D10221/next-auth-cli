@@ -1,6 +1,6 @@
 import Debug from "./debug.js";
 const debug = Debug(
-  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+  import.meta
 );
 import typeorm from "typeorm";
 /**

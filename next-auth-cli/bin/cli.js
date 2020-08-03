@@ -9,7 +9,7 @@ import Debug from "next-auth-cli/cli/debug.js";
 import path from "path";
 import yargs from "yargs";
 const debug = Debug(
-  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+  import.meta
 );
 const cwd = process.cwd();
 debug("cwd: ", cwd);

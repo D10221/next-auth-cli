@@ -1,7 +1,7 @@
 import nextAuthCli from "next-auth-cli";
 import Debug from "next-auth-cli/cli/debug.js";
 export const debug = Debug(
-  import.meta.url || (typeof module !== "undefined" && module.filename) || ""
+  import.meta
 );
 const name = "drop-database";
 /** run */
