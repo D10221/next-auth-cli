@@ -3,16 +3,17 @@ import Debug from "next-auth-cli/cli/debug.js";
 export const debug = Debug(
   import.meta
 );
-const name = "create-database";
+const name = "drop-database";
 /** run */
 export default {
   name,
-  describe: '"Create database"',
+  command: name,
+  describe: '"Drop database"',
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
     yargs
       .usage(
-        "create-database [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]"
+        "drop-database [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]"
       )
       .options({
         dbUrl: {
@@ -52,8 +53,8 @@ export default {
           alias: "m",
           // normalize: true,
         },
-        dropDatabase: {
-          description: "Drop database before drop",
+        createDatabase: {
+          description: "create database after drop",
           type: "boolean",
         },
       });
@@ -62,15 +63,15 @@ export default {
     dbUrl,
     quiet = Boolean(process.env.CI),
     models,
-    dropDatabase,
+    createDatabase,
   }) => {
     try {
       if (!quiet) debug.enabled = true;
       await nextAuthCli.dropDatabase(dbUrl, {
         models,
         quiet,
-        createDatabase: true,
-        dropDatabase,
+        createDatabase,
+        dropDatabase: true
       });
       debug("done");
       process.exit();

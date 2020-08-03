@@ -1,19 +1,16 @@
 import nextAuthCli from "next-auth-cli";
 import Debug from "next-auth-cli/cli/debug.js";
-export const debug = Debug(
-  import.meta
-);
-const name = "drop-database";
+export const debug = Debug(import.meta);
+const name = "sync";
 /** run */
 export default {
   name,
-  describe: '"Drop database"',
+  command: name,
+  describe: '"synchronize database models"',
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
     yargs
-      .usage(
-        "drop-database [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]"
-      )
+      .usage("sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]")
       .options({
         dbUrl: {
           description:
@@ -52,8 +49,9 @@ export default {
           alias: "m",
           // normalize: true,
         },
-        createDatabase: {
-          description: "create database after drop",
+        dropSchema: {
+          alias: "D",
+          description: "Drop schema",
           type: "boolean",
         },
       });
@@ -62,16 +60,11 @@ export default {
     dbUrl,
     quiet = Boolean(process.env.CI),
     models,
-    createDatabase,
+    dropSchema,
   }) => {
     try {
       if (!quiet) debug.enabled = true;
-      await nextAuthCli.dropDatabase(dbUrl, {
-        models,
-        quiet,
-        createDatabase,
-        dropDatabase: true
-      });
+      await nextAuthCli.sync(dbUrl, { models, dropSchema, quiet });
       debug("done");
       process.exit();
     } catch (error) {

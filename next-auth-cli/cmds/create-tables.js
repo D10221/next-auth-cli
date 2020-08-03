@@ -3,10 +3,11 @@ import Debug from "next-auth-cli/cli/debug.js";
 export const debug = Debug(
   import.meta
 );
-const name = "sync";
+const name = "create-tables";
 /** run */
 export default {
   name,
+  command: name,
   describe: '"synchronize database models"',
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
@@ -50,9 +51,21 @@ export default {
           alias: "m",
           // normalize: true,
         },
-        dropSchema: {
+        dropTables: {
           alias: "D",
-          description: "Drop schema",
+          description: "Drop schema (tables, indices, fkeys)",
+          type: "boolean",
+        },
+        createForeignKeys: {
+          description: "Create Foreign Keys (false)",
+          type: "boolean",
+        },
+        createIndices: {
+          description: "Create Indices (if indices)",
+          type: "boolean",
+        },
+        transaction: {
+          description: "Create transaction (true)",
           type: "boolean",
         },
       });
@@ -61,11 +74,29 @@ export default {
     dbUrl,
     quiet = Boolean(process.env.CI),
     models,
-    dropSchema,
+    help,
+    dropTables,
+    createForeignKeys,
+    createIndices,
+    transaction,
+    ...etc
   }) => {
     try {
+      // if(Object.keys(etc).length){throw new Error(`Unknown option: ${Object.keys(etc).join()}`)}
       if (!quiet) debug.enabled = true;
-      await nextAuthCli.sync(dbUrl, { models, dropSchema, quiet });
+      if (!dbUrl) {
+        if (quiet) throw new Error("Missing or empty database dbUrl");
+        console.error("Missing or empty database dbUrl");
+        return (await import("yargs")).showHelp();
+      }
+      await nextAuthCli.createTables(dbUrl, {
+        models,
+        dropTables,
+        quiet,
+        createForeignKeys,
+        createIndices,
+        transaction,
+      });
       debug("done");
       process.exit();
     } catch (error) {
