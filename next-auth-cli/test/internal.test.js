@@ -1,34 +1,11 @@
 import assert from "assert";
-import cli from "next-auth-cli";
-import typeorm from "typeorm";
-import {
-  loadConfig,
-  Models,
-  namingStrategies,
-  transform,
-} from "../cli/internal.js";
-import setup from "../cli/setup.js";
-import toTables from "../cli/to-tables.js";
 import fs from "fs";
+import cli from "next-auth-cli";
 import path from "path";
+import { loadConfig, Models, transform } from "../cli/internal.js";
+import setup from "../cli/setup.js";
+import { CONNECTION_STRINGS, entities } from "./config.js";
 
-const entities = [
-  new typeorm.EntitySchema(Models.User.schema),
-  new typeorm.EntitySchema(Models.Account.schema),
-  new typeorm.EntitySchema(Models.Session.schema),
-  new typeorm.EntitySchema(Models.VerificationRequest.schema),
-];
-
-const CONNECTION_STRINGS = {
-  MSSQL:
-    "mssql://nextauth:password@localhost:1433/nextauth?entityPrefix=nextauth_",
-  MONGODB:
-    "mongodb://nextauth:password@localhost/nextauth?entityPrefix=nextauth_&synchronize=true",
-  SQLITE: "sqlite://./temp/nextauth.sqlite",
-  MYSQL: "mysql://nextauth:password@127.0.0.1:3306/nextauth?synchronize=true",
-  POSTGRES:
-    "postgres://nextauth:password@127.0.0.1:5432/nextauth?synchronize=true",
-};
 // reset sqlite file
 let urlPath = CONNECTION_STRINGS.SQLITE.split("sqlite://")[1];
 urlPath = path.isAbsolute(urlPath)
@@ -143,27 +120,4 @@ describe("next-auth-cli", () => {
       "things"
     );
   });
-
-  it("converts models to typeorm.Table[] (toTables)", () => {
-    const tables = toTables(Models, {
-      namingStrategy: new namingStrategies.SnakeCaseNamingStrategy(),
-    });
-    assert.deepEqual(
-      tables.map((x) => x.name),
-      ["accounts", "users", "sessions", "verification_requests"]
-    );
-  });
-  // Test Only sqlite on unit test? 
-  // Test other adapter with shell, isolate process ? 
-  for (const key of Object.keys(CONNECTION_STRINGS)) {
-    it("syncs", async () => {
-      try {
-        // Need to reset Config?
-        await cli.dropDatabase(CONNECTION_STRINGS[key]);
-        await cli.sync(CONNECTION_STRINGS[key]);
-      } catch (error) {
-        assert.fail(`${key} sync FAILED`);
-      }
-    });
-  }
 });
