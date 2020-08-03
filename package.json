@@ -3,10 +3,10 @@
   "workspaces": [
     "next-auth-cli",
     "next-auth-cli-demo-esm",
-    "next-auth-cli-demo",
-    "loader"
+    "next-auth-cli-demo"    
   ],
   "scripts": {
-    "test": "yarn workspacees run test"
+    "test": "yarn workspaces run test",
+    "build": "yarn workspaces run test"    
   }
 }
