@@ -1,6 +1,5 @@
 import assert from "assert";
 import fs from "fs";
-import cli from "next-auth-cli";
 import path from "path";
 import { loadConfig, Models, transform } from "../cli/internal.js";
 import setup from "../cli/setup.js";
@@ -15,19 +14,7 @@ if (fs.existsSync(urlPath)) {
   fs.unlinkSync(urlPath);
 }
 
-describe("next-auth-cli", () => {
-  it('"module" can be imported', () => {
-    assert.equal(cli.name, "next-auth-cli");
-  });
-
-  it('"module" can be dynamically imported', async () => {
-    assert.equal((await import("next-auth-cli")).default.name, "next-auth-cli");
-  });
-
-  it('"module" doesn\'t leak imports', async () => {
-    assert.strictEqual((await import("next-auth-cli")).default, cli);
-  });
-
+describe("next-auth-cli (internal)", () => { 
   it('"setup" populates connection configuration from database url', async () => {
     const [config, models] = await setup(
       "sql://u:p@localhost:1/nextauth?entityPrefix=nextauth_"

@@ -1,7 +1,7 @@
 const assert = require("assert");
 async function main() {
   const { default: nextAuthCli } = await import("next-auth-cli/index.js");
-  assert(typeof nextAuthCli === "function");
+  assert.equal(nextAuthCli.name, "next-auth-cli");
   console.log("OK");
 }
 main()
