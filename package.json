@@ -7,6 +7,6 @@
   ],
   "scripts": {
     "test": "yarn workspaces run test",
-    "build": "yarn workspaces run test"    
+    "build": "yarn workspaces run build"    
   }
 }

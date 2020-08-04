@@ -1,8 +1,8 @@
-import Debug from "./debug.js";
+import Debug from "debug";
 import importModule from "./import-module.js";
 import { Adapter, parse } from "./internal.js";
 
-const debug = Debug(import.meta);
+const debug = Debug("next-auth-cli:sync");
 /**
  * Try sync with adapter
  * @returns {Promise<void>}

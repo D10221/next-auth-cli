@@ -14,7 +14,7 @@ const req = module.createRequire(import.meta.url);
 /** */
 export const binLocation = path.join(
   path.dirname(req.resolve("next-auth-cli")),
-  "bin/cli.js"
+  "cli/bin.js"
 );
 // reset sqlite file
 let urlPath = CONNECTION_STRINGS.SQLITE.split("sqlite://")[1];

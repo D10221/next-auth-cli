@@ -1,7 +1,7 @@
-import { sync } from "next-auth-cli";
-import Debug from "next-auth-cli/cli/debug.js";
-export const debug = Debug("cmds:sync");
 import chalk from "chalk";
+import Debug from "debug";
+import sync from "../sync.js";
+export const debug = Debug("next-auth-cli:cmds:sync");
 const name = "sync";
 /** run */
 export default {
@@ -61,7 +61,7 @@ export default {
     database,
     // extra options
     quiet = Boolean(process.env.CI),
-    _: postional,    
+    _: postional,
   }) => {
     try {
       const config = postional[1];

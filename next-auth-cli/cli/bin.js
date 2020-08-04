@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import dotnev from "dotenv";
 import fs from "fs";
-import Debug from "next-auth-cli/cli/debug.js";
+import Debug from "debug";
 import path from "path";
+import url from "url";
 import yargs from "yargs";
-import module from "module";
-const debug = Debug("bin");
+const debug = Debug("next-auth-cli:bin");
 const cwd = process.cwd();
 debug("cwd: ", cwd);
 // load cwd .env|.env.local ?
@@ -19,7 +19,7 @@ debug(
 );
 /** resolve location */
 const cmdBase = path.join(
-  path.dirname(module.createRequire(import.meta.url).resolve("next-auth-cli")),
+  path.dirname(url.fileURLToPath(import.meta.url)),
   "cmds"
 );
 /**

@@ -6,7 +6,7 @@
   "module": "index.js",
   "types": "index.d.ts",
   "bin": {
-    "next-auth-cli": "bin/cli.js"
+    "next-auth-cli": "cli/bin.js"
   },
   "author": "Mr D.",
   "license": "MIT",
@@ -56,9 +56,9 @@
     "docker": "docker-compose -f ../docker/docker-compose.yml",
     "docker:up": "docker-compose -f ../docker/docker-compose.yml up -d",
     "docker:down": "docker-compose -f ../docker/docker-compose.yml down",
-    "start": "node bin/cli.js",
-    "debug": "node --inspect bin/cli.js",
-    "debug:brk": "node --inspect-brk bin/cli.js "
+    "start": "node cli/bin.js",
+    "debug": "node --inspect cli/bin.js",
+    "debug:brk": "node --inspect-brk cli/bin.js "
   },
   "files": [
     "cli",

@@ -15,6 +15,7 @@ describe("next-auth-cli (module)", () => {
 });
 
 describe("next-auth-cli (cli)", function () {
+  this.timeout(3000);
   this.beforeAll(unlinkSqlite);
 
   it("helps", () => {
@@ -48,10 +49,11 @@ describe("next-auth-cli (cli)", function () {
   for (const key in CONNECTION_STRINGS) {
     it(`syncs ${key} --database --adapter`, function () {
       // if (1 === 1) this.skip(); //disabled!
-      try {        
+      try {
         run(
           "sync",
           "--database",
+          // @ts-ignore
           CONNECTION_STRINGS[key],
           "--adapter",
           "./test/next-auth-adapter.js"

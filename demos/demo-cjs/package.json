@@ -19,7 +19,7 @@
     "start": "bash -c './start.sh'",
     "test"  : "mocha",
     "build": "echo N/A",
-    "debug": "node --inspect ../node_modules/next-auth-cli/bin/cli.js",
-    "debug:brk": "node --inspect-brk ../node_modules/next-auth-cli/bin/cli.js"
+    "debug": "node --inspect ./node_modules/.bin/next-auth-cli",
+    "debug:brk": "node --inspect-brk ./node_modules/.bin/next-auth-cli"
   }
 }
