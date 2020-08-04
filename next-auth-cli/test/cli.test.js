@@ -21,7 +21,16 @@ describe("next-auth-cli (cli)", function () {
     const stdout = run("--help");
     assert.ok(/next-auth-cli\s+<cmd>\s+\[args\]/i.test(stdout));
   });
-  // Test Only sqlite on unit test?
+  it(`syncs [config]`, function () {
+    // if (1 === 1) this.skip(); //disabled!
+    try {
+      // @ts-ignore
+      run("sync", "./test/next-auth-config.js");
+      // assert.equal(stdout , something)  ?
+    } catch (error) {
+      assert.fail(`syncs [config] FAILED`);
+    }
+  });
   // Test other adapter with shell, isolate process ?
   for (const key in CONNECTION_STRINGS) {
     it(`syncs ${key} --database`, function () {
@@ -34,7 +43,25 @@ describe("next-auth-cli (cli)", function () {
         assert.fail(`${key} sync FAILED`);
       }
     });
-  } // Test Only sqlite on unit test?
+  }
+  // Test other adapter with shell, isolate process ?
+  for (const key in CONNECTION_STRINGS) {
+    it(`syncs ${key} --dattabase --adapter`, function () {
+      // if (1 === 1) this.skip(); //disabled!
+      try {        
+        run(
+          "sync",
+          "--database",
+          CONNECTION_STRINGS[key],
+          "--adapter",
+          "./test/next-auth-adapter.js"
+        );
+        // assert.equal(stdout , something)  ?
+      } catch (error) {
+        assert.fail(`${key} sync FAILED`);
+      }
+    });
+  }
 });
 
 /**

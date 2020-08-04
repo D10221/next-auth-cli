@@ -9,7 +9,6 @@ export default {
    * @param {string|{}} [database]
    * @param {{}} [opts]
    */
-  adapter: (database = CONNECTION_STRINGS.SQLITE, opts) =>
-    adapter(database, opts),
+  adapter,
   database: CONNECTION_STRINGS.SQLITE,
 };
