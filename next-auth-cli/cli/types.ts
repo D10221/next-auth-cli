@@ -16,3 +16,10 @@ export type Models = {
     };
   };
 };
+
+export type NextAuthAdapter = (...args:any[])=> { getAdapter(options?: {}): Promise<any> }
+
+export type Configuration = {
+  adapter?: string | NextAuthAdapter,  
+  database?: string | ConnectionOptions
+}

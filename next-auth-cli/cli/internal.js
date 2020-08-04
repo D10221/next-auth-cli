@@ -8,7 +8,10 @@ import NamingStrategies from "next-auth/dist/adapters/typeorm/lib/naming-strateg
 import Transform from "next-auth/dist/adapters/typeorm/lib/transform.js";
 // @ts-ignore
 import NextAuthUtils from "next-auth/dist/adapters/typeorm/lib/utils.js";
+/** */
+import typeorm from "typeorm";
 /**
+ * URL to connection options
  * @param {string} url
  * @returns {import("./types").ConnectionOptions}
  */
@@ -23,7 +26,7 @@ export function parse(url) {
 export const loadConfig = ([config, models]) => {
   const loaded = AdapterConfig.default.loadConfig(config, {
     models,
-    // ? expects namingStrategy as options
+    // ? expects namingStrategy as option
     namingStrategy: config.namingStrategy,
   });
   return [
@@ -32,7 +35,7 @@ export const loadConfig = ([config, models]) => {
   ];
 };
 /**
- *
+ * 'next-auth' utilitiy
  * @param {[import("./types").ConnectionOptions, import("./types").Models]} args
  * @returns {[import("./types").ConnectionOptions, import("./types").Models]}
  */
@@ -42,8 +45,9 @@ export const transform = ([config, models]) => {
   Transform.default(config, models, config);
   return [config, models];
 };
-/** @type {import("./types").Models} */
+/** @type {import("./types").Models} default 'next-auth' models */
 export const Models = Adapters.TypeORM.Models;
+/** @type {*} 'next-auth' naming strategies */
 export const namingStrategies = NamingStrategies;
 /**
  * @param {import("typeorm").Connection} connection
@@ -51,4 +55,14 @@ export const namingStrategies = NamingStrategies;
  */
 export const updateConnectionEntities = (connection, entities) =>
   NextAuthUtils.updateConnectionEntities(connection, entities);
+/**
+ * @type {*} default 'next-auth' adapter
+ */
 export const Adapter = Adapters.TypeORM.Adapter;
+/** NOT USED */
+export const entities = [
+  new typeorm.EntitySchema(Models.User.schema),
+  new typeorm.EntitySchema(Models.Account.schema),
+  new typeorm.EntitySchema(Models.Session.schema),
+  new typeorm.EntitySchema(Models.VerificationRequest.schema),
+];
