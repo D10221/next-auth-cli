@@ -1,6 +1,7 @@
-import nextAuthCli from "next-auth-cli";
+import { sync } from "next-auth-cli";
 import Debug from "next-auth-cli/cli/debug.js";
-export const debug = Debug(import.meta);
+export const debug = Debug("cmds:sync");
+import chalk from "chalk";
 const name = "sync";
 /** run */
 export default {
@@ -9,19 +10,33 @@ export default {
   describe: '"synchronize database models"',
   /** @param {import("yargs").Argv} yargs */
   builder: (yargs) => {
-    yargs
-      .usage("sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]")
+    yargs //
+      .usage("$0 sync [config] [...options]") //
+      .positional("config", {
+        describe:
+          "../path/to/my/configuration.js\n" +
+          "Optional: if '--adapter' or '--database' provided.",
+        type: "string",
+      })
       .options({
-        dbUrl: {
+        database: {
           description:
-            "Driver dependent database Url\n" +
-            "Typically:\n<driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt>=<val>]]\n" +
-            "Wellknown valid options are: \n" +
-            "- ?namingStrategy=<supported-next-auth-naming-strategy>\n" +
-            "- ?entityPrefix=<string>\n",
-          alias: "u",
+            "Driver dependent database URL\n" +
+            "OR ../path/to/my/database-configuration.js\n" +
+            "if protocol is 'file://'\n" +
+            "- Overrides config.database",
+          alias: "db",
           string: true,
-          required: true,
+        },
+        adapter: {
+          description:
+            "../path/to/my/adapter.js\n" +
+            "- Absolute or relative to cwd.\n" +
+            "- Defaults to next-auth Default adapter" +
+            "- Overrides config.adapter",
+          type: "string",
+          alias: "a",
+          // normalize: true,
         },
         quiet: {
           description: "Be quiet",
@@ -39,37 +54,44 @@ export default {
             };
           },
         },
-        models: {
-          description:
-            "../path/to/my/models.js\n" +
-            "- As default export\n" +
-            "- Absolute or relative to cwd.\n" +
-            "- Defaults to next-auth Models",
-          type: "string",
-          alias: "m",
-          // normalize: true,
-        },
-        dropSchema: {
-          alias: "D",
-          description: "Drop schema",
-          type: "boolean",
-        },
       });
   },
   handler: async ({
-    dbUrl,
+    adapter,
+    database,
+    // extra options
     quiet = Boolean(process.env.CI),
-    models,
-    dropSchema,
+    _: postional,    
   }) => {
     try {
-      if (!quiet) debug.enabled = true;
-      await nextAuthCli.sync(dbUrl, { models, dropSchema, quiet });
+      const config = postional[1];
+      debug({ config, database, adapter });
+      if (!(config || adapter || database)) {
+        // require at least 1 option
+        (await import("yargs")).default.showHelp();
+        return console.warn(
+          chalk.yellowBright(
+            "\nExpected <configuration> or <database> or [<database> + <adapter>]\n"
+          )
+        );
+      }
+      if (!config) {
+        //TODO: use yarg conflicts?
+        if (!database) {
+          (await import("yargs")).default.showHelp();
+          return console.warn(
+            chalk.yellowBright(
+              "\nExpected <configuration> or <database> or [<database> + <adapter>]\n"
+            )
+          );
+        }
+      }
+      await sync(config, database, adapter, { quiet });
       debug("done");
+      // it takes too long otherwise
       process.exit();
     } catch (error) {
-      console.error(error);
-      process.exit(-1);
+      return Promise.reject(error);
     }
   },
 };

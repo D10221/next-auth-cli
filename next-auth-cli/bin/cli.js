@@ -22,7 +22,6 @@ const cmdBase = path.join(
   path.dirname(module.createRequire(import.meta.url).resolve("next-auth-cli")),
   "cmds"
 );
-
 /**
  * @param {string} cmdBase where the commands are ...
  */

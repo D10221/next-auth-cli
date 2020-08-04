@@ -1,5 +1,5 @@
 {
-  "name": "next-auth-cli-demo-esm",
+  "name": "demo-esm",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -17,7 +17,7 @@
     "docker:help": "yarn workspace next-auth-cli docker:help",
     "docker:up": "yarn workspace next-auth-cli docker:up",
     "docker:down": "yarn workspace next-auth-cli docker:down",
-    "start": "next-auth-cli",
+    "start": "bash -c './start.sh'",
     "test": "mocha",
     "build": "echo N/A"
   }

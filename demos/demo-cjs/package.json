@@ -1,5 +1,5 @@
 {
-  "name": "next-auth-cli-demo",
+  "name": "demo-cjs",
   "private": true,
   "version": "1.0.0",
   "main": "index.js",
@@ -16,7 +16,7 @@
     "docker:help": "yarn workspace next-auth-cli docker:help",
     "docker:up": "yarn workspace next-auth-cli docker:up",
     "docker:down": "yarn workspace next-auth-cli docker:down",
-    "start": "next-auth-cli --models=./models.js",
+    "start": "bash -c './start.sh'",
     "test"  : "mocha",
     "build": "echo N/A",
     "debug": "node --inspect ../node_modules/next-auth-cli/bin/cli.js",
