@@ -16,7 +16,7 @@ Commands:
   next-auth-cli sync  "synchronize database models"
 
 Options:
-  --help     Show help            [boolean]  
+  --help     Show help [boolean]
   --version  Show version number  [boolean]
 ```
 
@@ -31,33 +31,26 @@ $ next-auth-cli sync --help
 ```
 
 ```
-sync [-u <$NEXTAUTH_DB_URL>] [-q] [-c] [-m=</models.js>]
+next-auth-cli sync [config] [...options]
+
+Positionals:
+  config  ../path/to/my/configuration.js
+          Optional: if '--adapter' or '--database' provided.            [string]
 
 Options:
-  --help        Show help                                              [boolean]
-  --version     Show version number                                    [boolean]
-  --url, -u     Driver dependent database url
-                Typically:
-                <driver>://[<u>:<p>]@<server>[:port]/<dbName>[?<opt>=<val>[&<opt
-                >=<val>]]
-                Wellknown valid options are:
-                - ?namingStrategy=<supported-next-auth-naming-strategy>
-                - ?entityPrefix=<string>
-                - ?synchronize=<true|false>                  [string] [required]
-  --quiet, -q   Be quiet                                               [boolean]
-  --ci, -c      same as --quiet, overrides $CI                         [boolean]
-  --models, -m  ../path/to/my/models.js
-                - As default export
-                - Absolute or relative to cwd.
-                - Defaults to next-auth Models                          [string]
+  --help            Show help                                          [boolean]
+  --version         Show version number                                [boolean]
+  --database, --db  Driver dependent database URL
+                    OR ../path/to/my/database-configuration.js
+                    if protocol is 'file://'
+                    - Overrides config.database                         [string]
+  --adapter, -a     ../path/to/my/adapter.js
+                    - Absolute or relative to cwd.
+                    - Defaults to next-auth Default adapter- Overrides
+                    config.adapter                                      [string]
+  --quiet, -q       Be quiet                                           [boolean]
+  --ci, -c          same as --quiet, overrides $CI                     [boolean]
 ```
-
-### Notes:
-
-- env vars mapping, url defaults to \$NEXTAUTH_DB_URL:
-- url options to config mapping
-- ```namingStrategy``` lookup
-- custom models (wip), from module `{...models}|(models)=>({...models})`
 
 ## SEED _(TODO)_
 
@@ -68,7 +61,16 @@ _seed models with your data_
 ```
 $ next-auth-cli seed --help
 ```
+
 ```
 $ TODO:
 ```
 
+## Debug
+
+---
+
+```sh
+# namespaced
+DEBUG=next-auth-cli:*
+```
