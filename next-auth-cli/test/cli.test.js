@@ -46,7 +46,7 @@ describe("next-auth-cli (cli)", function () {
   }
   // Test other adapter with shell, isolate process ?
   for (const key in CONNECTION_STRINGS) {
-    it(`syncs ${key} --dattabase --adapter`, function () {
+    it(`syncs ${key} --database --adapter`, function () {
       // if (1 === 1) this.skip(); //disabled!
       try {        
         run(
