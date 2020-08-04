@@ -9,17 +9,16 @@
     "next-auth-cli": "0.1.0-1"
   },
   "devDependencies": {
-    "mocha": "^8.0.1"
+    "mocha": "^8.0.1",
+    "rimraf": "^3.0.2"
   },
   "scripts": {
     "docker": "yarn workspace next-auth-cli docker",
     "docker:help": "yarn workspace next-auth-cli docker:help",
     "docker:up": "yarn workspace next-auth-cli docker:up",
     "docker:down": "yarn workspace next-auth-cli docker:down",
-    "start": "bash -c './start.sh'",
-    "test"  : "mocha",
-    "build": "echo N/A",
-    "debug": "node --inspect ./node_modules/.bin/next-auth-cli",
-    "debug:brk": "node --inspect-brk ./node_modules/.bin/next-auth-cli"
+    "start": "rimraf temp && next-auth-cli sync \"./next-auth-config.js\" && sqlite3 temp/nextauth.sqlite \"select name from sqlite_master\"",
+    "test": "mocha",
+    "build": "echo N/A"
   }
 }

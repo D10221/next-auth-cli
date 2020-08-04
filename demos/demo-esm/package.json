@@ -17,7 +17,7 @@
     "docker:help": "yarn workspace next-auth-cli docker:help",
     "docker:up": "yarn workspace next-auth-cli docker:up",
     "docker:down": "yarn workspace next-auth-cli docker:down",
-    "start": "bash -c './start.sh'",
+    "start": "rimraf temp && next-auth-cli sync \"./next-auth-config.js\" && sqlite3 temp/nextauth.sqlite \"select name from sqlite_master\"",
     "test": "mocha",
     "build": "echo N/A"
   }
