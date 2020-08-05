@@ -12,11 +12,12 @@ export default {
   builder: (yargs) => {
     yargs //
       .usage("$0 sync [config] [...options]") //
-      .positional("config", {
+      .positional("nextauth-config", {
         describe:
           "../path/to/my/configuration.js\n" +
           "Optional: if '--adapter' or '--database' provided.",
         type: "string",
+        default: process.env.NEXTAUTH_CONFIG,
       })
       .options({
         database: {
@@ -56,15 +57,17 @@ export default {
         },
       });
   },
-  handler: async ({
-    adapter,
-    database,
-    // extra options
-    quiet = Boolean(process.env.CI),
-    _: postional,
-  }) => {
+  handler: async (argv) => {
+    debug(argv);
+    const {
+      adapter,
+      database,
+      quiet = Boolean(process.env.CI),
+      nextauthConfig,
+      _: postional,
+    } = argv;
     try {
-      const config = postional[1];
+      const config = postional[1] || nextauthConfig;
       debug({ config, database, adapter });
       if (!(config || adapter || database)) {
         // require at least 1 option
