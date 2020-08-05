@@ -49,8 +49,8 @@ function importCmds(cmdBase) {
       .scriptName("next-auth-cli")
       .usage("Usage:\n $0 <cmd> [args]")
       .env("NEXTAUTH_")
-      .demandCommand(1)
-      .strict();
+      .demandCommand(1);
+    //.strict();
     // yargs can't load commadDir , because it can't require 'modules'
     for (const cmd of await importCmds(cmdBase)) {
       debug("command: %s", cmd.command);
