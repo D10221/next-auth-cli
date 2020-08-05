@@ -1,6 +1,8 @@
 import adapter from "./adapter";
 import config from "./config";
-/** */
+/**
+ * this authorize 'callback' depends on the 'custom' models
+ */
 export default async function authorize({ username, password }) {
   try {
     const _adapter = await adapter(config.database).getAdapter();
