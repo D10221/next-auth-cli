@@ -3,10 +3,14 @@
   "workspaces": [
     "next-auth-cli",
     "demos/demo-esm",
-    "demos/demo-cjs"    
+    "demos/demo-cjs",
+    "demos/demo-next"
   ],
   "scripts": {
     "test": "yarn workspaces run test",
-    "build": "yarn workspaces run build"    
+    "build": "yarn workspaces run build"
+  },
+  "dependencies": {
+    "next-auth": "../next-auth"
   }
 }

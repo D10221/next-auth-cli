@@ -11,8 +11,7 @@
   "author": "Mr D.",
   "license": "MIT",
   "dependencies": {
-    "esm": "^3.2.25",
-    "next-auth": "../next-auth"
+    "esm": "^3.2.25"    
   },
   "peerDependencies": {
     "mongodb": "^3.5.9",
