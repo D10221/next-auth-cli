@@ -1,0 +1,22 @@
+{
+  "name": "demo-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=\"--inspect\" next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:sync": "echo \"next-auth-cli should pickup the database from .env\" && next-auth-cli sync"
+  },
+  "dependencies": {
+    "clsx": "^1.1.1",
+    "next": "9.5.1",    
+    "react": "16.13.1",
+    "react-dom": "16.13.1"    
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.44",
+    "cross-env": "^7.0.2",
+    "typescript": "^3.9.7"
+  }
+}
