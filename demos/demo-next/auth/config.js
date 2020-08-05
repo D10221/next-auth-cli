@@ -10,7 +10,9 @@ export default {
    * @param {{}} [opts]
    */
   adapter,
-  database: process.env.NEXTAUTH_DATABASE_URL,
+  // NOTE: adapter : process.env.NODE_ENV !== 'production' ? myDevAdapter : myProductionAdapter
+  database: process.env.NEXTAUTH_DATABASE_URL, 
+  // process.env.NODE_ENV !== 'production' ? devDb : prodDB  -- 
   providers: [
     Providers.Credentials({
       name: "Credentials",

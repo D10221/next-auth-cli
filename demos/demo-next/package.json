@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_OPTIONS=\"--inspect\" next dev",
     "build": "next build",
     "start": "next start",
-    "db:sync": "echo \"next-auth-cli should pickup the database from .env\" && next-auth-cli sync"
+    "db:sync": "next-auth-cli sync"
   },
   "dependencies": {
     "clsx": "^1.1.1",
