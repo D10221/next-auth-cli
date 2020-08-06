@@ -5,12 +5,16 @@ import { binLocation } from "./common.js";
 import cli from "next-auth-cli";
 
 describe("next-auth-cli (module)", () => {
+  // NOTE this tests work because of 'yarn' monorepo
+  //
   it('"module" can be imported', () => {
     assert.equal(cli.name, "next-auth-cli");
   });
 
   it('"module" can be dynamically imported', async () => {
-    assert.equal((await import("next-auth-cli")).default.name, "next-auth-cli");
+    const { default: imported } = await import("next-auth-cli");
+    assert.equal(imported.name, "next-auth-cli");
+    assert.strictEqual(imported, cli); // no leaks
   });
 });
 
@@ -23,32 +27,32 @@ describe("next-auth-cli (cli)", function () {
     assert.ok(/next-auth-cli\s+<cmd>\s+\[args\]/i.test(stdout));
   });
   it(`syncs [config]`, function () {
-    // if (1 === 1) this.skip(); //disabled!
     try {
-      // @ts-ignore
       run("sync", "./test/next-auth-config.js");
-      // assert.equal(stdout , something)  ?
+      // TODO assert.equal(stdout , something)  ?
     } catch (error) {
       assert.fail(`syncs [config] FAILED`);
     }
   });
-  // Test other adapter with shell, isolate process ?
+  // sync  --database
   for (const key in CONNECTION_STRINGS) {
     it(`syncs ${key} --database`, function () {
-      // if (1 === 1) this.skip(); //disabled!
       try {
-        // @ts-ignore
-        run("sync", "--database", CONNECTION_STRINGS[key]);
-        // assert.equal(stdout , something)  ?
+        run(
+          "sync",
+          "--database",
+          // @ts-ignore
+          CONNECTION_STRINGS[key]
+        );
+        // TODO assert.equal(stdout , something)  ?
       } catch (error) {
         assert.fail(`${key} sync FAILED`);
       }
     });
   }
-  // Test other adapter with shell, isolate process ?
+  // sync  --database --adapter
   for (const key in CONNECTION_STRINGS) {
-    it(`syncs ${key} --database --adapter`, function () {
-      // if (1 === 1) this.skip(); //disabled!
+    it(`syncs ${key} --database --adapter`, function () {      
       try {
         run(
           "sync",
@@ -58,14 +62,13 @@ describe("next-auth-cli (cli)", function () {
           "--adapter",
           "./test/next-auth-adapter.js"
         );
-        // assert.equal(stdout , something)  ?
+        // TODO assert.equal(stdout , something)  ?
       } catch (error) {
         assert.fail(`${key} sync FAILED`);
       }
     });
   }
 });
-
 /**
  * @param {string[]} args
  */
