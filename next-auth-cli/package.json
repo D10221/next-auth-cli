@@ -63,10 +63,8 @@
   },
   "files": [
     "cli",
-    "bin",
     "types",
     "*.js",
-    "*.d.ts",
-    "cmds"
+    "*.d.ts"
   ]
 }
