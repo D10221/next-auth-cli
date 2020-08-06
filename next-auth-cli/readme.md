@@ -93,5 +93,4 @@ perhaps exists in a different 'module/file' and passed down as cli flag.
 ```
 cli --adapter=my/adapter.js
 ```
-
-
+For more details see [test adapter and configuration](test/readme.md)
