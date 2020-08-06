@@ -6,7 +6,7 @@ const database = CONNECTION_STRINGS.SQLITE;
  * Same as expected by 'next-auth'
  */
 const config = { 
-  // It has to initialized to work with 'next-auth'
+  // It has to be initialized to work with 'next-auth'
   adapter: adapter(database),
   database,
 };
