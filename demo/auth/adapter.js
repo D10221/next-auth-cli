@@ -3,7 +3,7 @@ import Adapters from 'next-auth/adapters.js';
 // @ts-ignore
 import AdapterConfig from 'next-auth/dist/adapters/typeorm/lib/config.js';
 // @ts-ignore
-import NamingStrategies from 'next-auth/dist/adapters/typeorm/lib/naming-strategies.js';
+import { SnakeCaseNamingStrategy } from 'next-auth/dist/adapters/typeorm/lib/naming-strategies.js';
 /**
  * Adds extra field to standard models
  * @param {*} Models
@@ -31,7 +31,7 @@ function custom(Models) {
  * @param {string} url
  */
 function parse(url) {
-  return AdapterConfig.default.parseConnectionString(url);
+  return AdapterConfig.parseConnectionString(url);
 }
 /**
  * Wraps default adapter, cusomizing models
@@ -45,7 +45,7 @@ export default (database, options = {}) => {
     // Adapter knows how to synchronize on demmand
     /**
      * Without this it can't be simply 'cli sync my-config.js'
-     * @param {*} options
+     * @param {*} [options]
      */
     getAdapter(options) {
       if (!options || !options.synchronize) {
@@ -59,7 +59,7 @@ export default (database, options = {}) => {
 /**
  * @param {*} database
  * @param {*} options
- * TODO: cache, memoize this function based on database, options 
+ * TODO: cache, memoize this function based on database, options
  */
 function buildAdapter(database, options) {
   const _database = typeof database === 'string' ? parse(database) : database;
@@ -70,6 +70,6 @@ function buildAdapter(database, options) {
     ...options,
     models: custom(Adapters.TypeORM.Models),
     // namingStrategy is optional
-    namingStrategy: NamingStrategies.SnakeCaseNamingStrategy.default,
+    namingStrategy: new SnakeCaseNamingStrategy(),
   });
 }

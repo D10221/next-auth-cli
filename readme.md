@@ -74,3 +74,6 @@ $ TODO:
 # namespaced
 DEBUG=next-auth-cli:*
 ```
+___
+
+[See more ...](./next-auth-cli/readme.md)

@@ -2,9 +2,7 @@
   "private": true,
   "workspaces": [
     "next-auth-cli",
-    "demos/demo-esm",
-    "demos/demo-cjs",
-    "demos/demo-next"
+    "demo"    
   ],
   "scripts": {
     "test": "yarn workspaces run test",
