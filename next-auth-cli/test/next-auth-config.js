@@ -1,14 +1,13 @@
-import adapter from "./next-auth-adapter.js";
+import adapter from "./next-auth-external-adapter.js";
 import { CONNECTION_STRINGS } from "./common.js";
+const database = CONNECTION_STRINGS.SQLITE;
 /**
  * Next-auth configuration
  * Same as expected by 'next-auth'
  */
-export default {
-  /**
-   * @param {string|{}} [database]
-   * @param {{}} [opts]
-   */
-  adapter,
-  database: CONNECTION_STRINGS.SQLITE,
+const config = { 
+  // It has to initialized to work with 'next-auth'
+  adapter: adapter(database),
+  database,
 };
+export default config;

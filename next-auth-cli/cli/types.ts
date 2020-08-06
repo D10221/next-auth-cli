@@ -17,9 +17,15 @@ export type Models = {
   };
 };
 
-export type NextAuthAdapter = (...args:any[])=> { getAdapter(options?: {}): Promise<any> }
+export type NextAuthAdapter = (
+  ...args: any[]
+) => { getAdapter(options?: {}): Promise<any> };
+
+export interface CustomNextAuthAdapter {
+  getAdapter(appOptions?: {}): Promise<any>;
+}
 
 export type Configuration = {
-  adapter?: string | NextAuthAdapter,  
-  database?: string | ConnectionOptions
-}
+  adapter?: string | NextAuthAdapter;
+  database?: string | ConnectionOptions;
+};

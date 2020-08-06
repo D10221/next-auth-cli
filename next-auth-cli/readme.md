@@ -74,3 +74,24 @@ $ TODO:
 # namespaced
 DEBUG=next-auth-cli:*
 ```
+
+NOTES:
+
+For the sync command to work with a custom adapter,
+the custom adapter should 'honnor' the 'synchronize' flag
+that would be provided by the command to the `adapter.getAdapter` implementation.  
+Or accept 'database' as 1st parameters, as initialization options, 
+but only when the adapter was provided by the `--adapter` sync's command's option.  
+
+'next-auth' won't initialize the custom adapter, but simply call it with the appOptions as parameter.
+
+'next-auth-cli' will try to initialize the 'adapter' if the adapter does not have a 'getAdapter' member function
+
+So  in effect, for a custom adapter to be 'syncable' its has to accept synchonize on 'getAdapter'
+perhaps exists in a different 'module/file' and passed down as cli flag.
+
+```
+cli --adapter=my/adapter.js
+```
+
+
