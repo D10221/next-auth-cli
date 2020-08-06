@@ -11,7 +11,8 @@
   "author": "Mr D.",
   "license": "MIT",
   "dependencies": {
-    "esm": "^3.2.25"    
+    "esm": "^3.2.25",
+    "next-auth": "3.1.0"
   },
   "peerDependencies": {
     "mongodb": "^3.5.9",
@@ -50,8 +51,8 @@
   },
   "scripts": {
     "build": "rm types -rf && tsc -p .",
-    "test": "yarn docker:down && yarn docker:up && sleep 10 && mocha --exit",
-    "re:test": "mocha --exit",
+    "test:local": "yarn docker:down && yarn docker:up && sleep 10 && yarn test",
+    "test": "mocha --exit",
     "docker:help": "echo usage:\n\t\"yarn docker <up|down> [-d]\"\n\t will launch \"docker-compose ../docker/docker-compose [...args]\"",
     "docker": "docker-compose -f ../docker/docker-compose.yml",
     "docker:up": "docker-compose -f ../docker/docker-compose.yml up -d",

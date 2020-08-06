@@ -7,8 +7,5 @@
   "scripts": {
     "test": "yarn workspaces run test",
     "build": "yarn workspaces run build"
-  },
-  "dependencies": {
-    "next-auth": "../next-auth"
   }
 }
