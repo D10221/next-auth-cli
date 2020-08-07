@@ -5,7 +5,7 @@
     "demo"    
   ],
   "scripts": {
-    "test": "yarn workspaces run test",
-    "build": "yarn workspaces run build"
+    "build": "yarn workspace next-auth-cli run build",
+    "test": "yarn workspace next-auth-cli run test"
   }
 }
