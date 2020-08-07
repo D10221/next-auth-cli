@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",    
+    "module": "ESNext",
     "moduleResolution": "Node",
     "allowJs": true,
     "checkJs": true,
@@ -9,9 +9,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,    
+    "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "types" 
+    "declarationDir": "types"
   },
-  "include": ["index.js"], 
+  "include": ["index.js"]
 }

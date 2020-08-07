@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
-    "@types/mocha": "^8.0.0",    
+    "@types/mocha": "^8.0.0",
     "mocha": "^8.0.1",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
@@ -57,7 +57,7 @@
     "*.d.ts"
   ],
   "scripts": {
-    "pretty": "prettier",
+    "pretty": "prettier --write **/*.{js,ts,json,md}",
     "prebuild": "rm types -rf",
     "build": "tsc -p .",
     "test:local": "yarn docker:down && yarn docker:up && sleep 10 && yarn test",
