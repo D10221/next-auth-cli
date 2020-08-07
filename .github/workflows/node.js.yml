@@ -8,11 +8,6 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  workflow_dispatch:
-    inputs:
-      xyz: 'now'
-      required: false
-      value: 1
     
 jobs:
   build:
