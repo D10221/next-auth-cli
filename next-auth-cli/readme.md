@@ -40,7 +40,7 @@ Options:
   --database, --db  DB Url
     '<driver>://[<credentials>@]<host>/<db>[?<option>=<value>];'
     'file://./path/to/db-conf.js'
-    - Overrides config.database    
+    - Overrides config.database
 
   --adapter, -a     '../path/to/my/adapter.js'
     - Absolute or relative to cwd.
