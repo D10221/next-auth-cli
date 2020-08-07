@@ -59,7 +59,7 @@ export default (database, options = {}) => {
 /**
  * @param {*} database
  * @param {*} options
- * TODO: cache, memoize this function based on database, options 
+ * TODO: cache, memoize this function based on database, options
  */
 function buildAdapter(database, options) {
   const _database = typeof database === 'string' ? parse(database) : database;

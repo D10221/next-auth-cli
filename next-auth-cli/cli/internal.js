@@ -1,7 +1,7 @@
 // @ts-ignore
-import Adapters from "next-auth/adapters.js";
+import Adapters from 'next-auth/adapters.js';
 // @ts-ignore
-import AdapterConfig from "next-auth/dist/adapters/typeorm/lib/config.js";
+import AdapterConfig from 'next-auth/dist/adapters/typeorm/lib/config.js';
 /**
  * URL to connection options
  * @param {string} url

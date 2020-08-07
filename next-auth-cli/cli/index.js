@@ -1,5 +1,5 @@
-import sync from "./sync.js";
-export const name = "next-auth-cli";
+import sync from './sync.js';
+export const name = 'next-auth-cli';
 export { sync };
 /**
  *

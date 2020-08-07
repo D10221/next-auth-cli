@@ -1,5 +1,7 @@
 # next-auth-cli (wip)
 
+![Node.js CI](https://github.com/D10221/next-auth-cli/workflows/Node.js%20CI/badge.svg)
+
 _[next-auth](https://next-auth.js.org) command line utility_
 
 Usage?
