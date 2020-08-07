@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "db:sync": "next-auth-cli sync",   
-    "db:init": "rimraf temp && next-auth-cli sync && sqlite3 temp/nextauth.sqlite \"insert into users (name, email, password) values ('admin', 'admin@localhost', 'admin');\""
+    "db:init": "rimraf temp && next-auth-cli sync && sqlite3 temp/nextauth.sqlite \"insert into users (name, email, password) values ('admin', 'admin@localhost', 'admin');\"",
+    "test": "echo \"N/A\""
   },
   "dependencies": {
     "clsx": "^1.1.1",
