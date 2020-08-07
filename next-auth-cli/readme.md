@@ -35,21 +35,21 @@ next-auth-cli sync [config] [...options]
 
 Positionals:
   config  ../path/to/my/configuration.js
-          Optional: if '--adapter' or '--database' provided.            [string]
-
+          Optional: if '--adapter' or '--database' provided.
 Options:
-  --help            Show help                                          [boolean]
-  --version         Show version number                                [boolean]
-  --database, --db  Driver dependent database URL
-                    OR ../path/to/my/database-configuration.js
-                    if protocol is 'file://'
-                    - Overrides config.database                         [string]
-  --adapter, -a     ../path/to/my/adapter.js
-                    - Absolute or relative to cwd.
-                    - Defaults to next-auth Default adapter- Overrides
-                    config.adapter                                      [string]
-  --quiet, -q       Be quiet                                           [boolean]
-  --ci, -c          same as --quiet, overrides $CI                     [boolean]
+  --database, --db  DB Url
+    '<driver>://[<credentials>@]<host>/<db>[?<option>=<value>];'
+    'file://./path/to/db-conf.js'
+    - Overrides config.database    
+
+  --adapter, -a     '../path/to/my/adapter.js'
+    - Absolute or relative to cwd.
+    - Defaults to next-auth Default adapter
+    - Overrides config.adapter
+
+  --help            Show help
+  --quiet, -q       Be quiet
+  --ci, -c          same as --quiet, overrides $CI
 ```
 
 ## SEED _(TODO)_
