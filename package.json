@@ -5,9 +5,7 @@
     "demo"
   ],
   "husky": {
-    "hooks": {
-      "pre-commit": "yarn workspace next-auth-cli precommit"
-    }
+    "hooks": {}
   },
   "devDependencies": {
     "husky": "^4.2.5"
