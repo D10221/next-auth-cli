@@ -68,7 +68,7 @@
     "docker:down": "docker-compose -f ../docker/docker-compose.yml down",
     "start": "node cli/bin.js",
     "debug": "node --inspect cli/bin.js",
-    "debug:brk": "node --inspect-brk cli/bin.js ",
+    "debug:brk": "node --inspect-brk cli/bin.js",
     "precommit": "yarn pretty && yarn build && yarn test"
   }
 }
