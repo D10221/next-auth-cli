@@ -2,8 +2,16 @@
   "private": true,
   "workspaces": [
     "next-auth-cli",
-    "demo"    
+    "demo"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn workspace next-auth-cli precommit"
+    }
+  },
+  "devDependencies": {
+    "husky": "^4.2.5"
+  },
   "scripts": {
     "build": "yarn workspace next-auth-cli run build",
     "test": "yarn workspace next-auth-cli run test"

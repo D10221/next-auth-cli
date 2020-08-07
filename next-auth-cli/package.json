@@ -23,12 +23,13 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
-    "@types/mocha": "^8.0.0",
+    "@types/mocha": "^8.0.0",    
     "mocha": "^8.0.1",
     "mongodb": "^3.5.9",
     "mssql": "^6.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.3.0",
+    "prettier": "^2.0.5",
     "sqlite3": "^5.0.0",
     "typescript": "^3.9.7"
   },
@@ -49,8 +50,16 @@
       "optional": true
     }
   },
+  "files": [
+    "cli",
+    "types",
+    "*.js",
+    "*.d.ts"
+  ],
   "scripts": {
-    "build": "rm types -rf && tsc -p .",
+    "pretty": "prettier",
+    "prebuild": "rm types -rf",
+    "build": "tsc -p .",
     "test:local": "yarn docker:down && yarn docker:up && sleep 10 && yarn test",
     "test": "mocha --exit",
     "docker:help": "echo usage:\n\t\"yarn docker <up|down> [-d]\"\n\t will launch \"docker-compose ../docker/docker-compose [...args]\"",
@@ -59,12 +68,7 @@
     "docker:down": "docker-compose -f ../docker/docker-compose.yml down",
     "start": "node cli/bin.js",
     "debug": "node --inspect cli/bin.js",
-    "debug:brk": "node --inspect-brk cli/bin.js "
-  },
-  "files": [
-    "cli",
-    "types",
-    "*.js",
-    "*.d.ts"
-  ]
+    "debug:brk": "node --inspect-brk cli/bin.js ",
+    "precommit": "yarn pretty && yarn build && yarn test"
+  }
 }

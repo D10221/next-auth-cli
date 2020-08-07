@@ -11,20 +11,18 @@ export const CONNECTION_STRINGS = {
 };
 /** */
 export const connection_strings = Object.keys(CONNECTION_STRINGS)
-.filter(key=> {  
-  if(process.env.GITHUB_WORKFLOW){
-    // run only sqlite on GITHUB actions
-    return key === "SQLITE";
-  }
-  return true;
-})
-.map(
-  (key) => ({
+  .filter((key) => {
+    if (process.env.GITHUB_WORKFLOW) {
+      // run only sqlite on GITHUB actions
+      return key === 'SQLITE';
+    }
+    return true;
+  })
+  .map((key) => ({
     key,
     // @ts-ignore
     value: CONNECTION_STRINGS[key],
-  })
-);
+  }));
 /** */
 const req = module.createRequire(import.meta.url);
 /** */
