@@ -1,8 +1,8 @@
-import { CONNECTION_STRINGS, unlinkSqlite } from './common.js';
 import assert from 'assert';
 import childProcess from 'child_process';
-import { binLocation } from './common.js';
 import cli from 'next-auth-cli';
+import { promisify } from 'util';
+import { binLocation, connection_strings, unlinkSqlite } from './common.js';
 
 describe('next-auth-cli (module)', () => {
   // NOTE this tests work because of 'yarn' monorepo
@@ -29,45 +29,42 @@ describe('next-auth-cli (cli)', function () {
     } catch (error) {
       assert.fail(error.message);
     }
-  });  
+  });
   /**
    * it can't re-configure adapter
    */
   it(`syncs [config]`, async () => {
     try {
       const result = await run('sync', './test/next-auth-config.js'); //.catch((e) => e);
-      // Assert fail 
+      // Assert fail
       assert.ok(!(result instanceof Error));
-     // assert.ok(/SQLITE_ERROR\: no such table: users/.test(result.message))
+      // assert.ok(/SQLITE_ERROR\: no such table: users/.test(result.message))
     } catch (error) {
       assert.fail(error.message);
     }
   });
   // sync  --database
-  for (const key in CONNECTION_STRINGS) {
+  for (const { key, value: connection_string } of connection_strings) {
     it(`syncs ${key} --database`, async () => {
       try {
-        const result = await run(
-          'sync',
-          '--database',
-          // @ts-ignore
-          CONNECTION_STRINGS[key]
-        ).catch((e) => e);
+        const result = await run('sync', '--database', connection_string).catch(
+          (e) => e
+        );
         assert.ok(!(result instanceof Error), result.stdout);
       } catch (error) {
         assert.fail(`${key} sync FAILED`);
       }
     });
   }
-  // sync  --database --adapter (FAILING)
-  for (const key in CONNECTION_STRINGS) {
+  // sync  --database --adapter
+  for (const { key, value: connection_string } of connection_strings) {
     it(`syncs ${key} --database --adapter`, async () => {
       try {
         const result = await run(
           'sync',
           '--database',
           // @ts-ignore
-          CONNECTION_STRINGS[key],
+          connection_string,
           '--adapter',
           './test/next-auth-external-adapter.js'
         ).catch((e) => e);
@@ -78,7 +75,6 @@ describe('next-auth-cli (cli)', function () {
     });
   }
 });
-import { promisify } from 'util';
 const exec = promisify(childProcess.exec);
 /**
  * @param {string[]} args
