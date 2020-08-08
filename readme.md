@@ -4,7 +4,13 @@
 
 _[next-auth](https://next-auth.js.org) command line utility_
 
-Usage?
+### Installation
+Until there is a package it can be installed as follows
+```
+yarn add https://github.com/D10221/next-auth-cli/releases/download/v0.1.0-1/next-auth-cli-v0.1.0-1.tgz
+```
+
+Usage
 
 ```bash
 node_modules/.bin/next-auth-cli --help
